@@ -49,7 +49,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"../build\jsoncpp.lib"
+# ADD LIB32 /nologo /out:"../build/vc6\jsoncpp.lib"
 
 !ELSEIF  "$(CFG)" == "jsoncpp - Win32 Debug"
 
@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"../build\jsoncppd.lib"
+# ADD LIB32 /nologo /out:"../build/vc6\jsoncppd.lib"
 
 !ENDIF 
 

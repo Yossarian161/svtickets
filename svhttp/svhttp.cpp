@@ -242,7 +242,8 @@ namespace svhttp
 	bool http_client::set_post_fields( const std::string& post_str )
 	{
 		return set_option(CURLOPT_POST, 1)
-			&& set_option(CURLOPT_POSTFIELDS, post_str.c_str());
+			&& set_option(CURLOPT_POSTFIELDS, post_str.c_str())
+			&& set_option(CURLOPT_POSTFIELDSIZE, post_str.length());
 	}
 
 }	//namespace svhttp

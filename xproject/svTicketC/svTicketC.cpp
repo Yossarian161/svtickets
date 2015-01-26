@@ -4,12 +4,46 @@
 #include "stdafx.h"
 
 #include "12306_help.h"
+#include <iostream>
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	ticket_manage _manage;
 	
+	if (_manage.login_init() != 1)
+	{
+		std::cout << "input pass code: ";
+		std::string spasscode;
+		std::cin >> spasscode;
+		
+		if (_manage.passcode_verify(spasscode))
+		{
+			if (_manage.login_verify("785192612@qq.com","1201qiao", spasscode))
+			{
+				//µÇÂ¼³É¹¦
+				SVLOGGER_INFO << "µÇÂ¼³É¹¦";
+			}
+			else
+			{
+				// µÇÂ¼Ê§°Ü
+				SVLOGGER_ERR << _manage.get_error_buffer();
+				goto _error;
+			}
+		}
+		else
+		{
+			SVLOGGER_ERR << _manage.get_error_buffer();
+			goto _error;
+		}
+	}
 
+	//
+	_manage.query_passengers();
+
+//	_manage.login_out();
+_error:
 	getchar();
+	
 	return 0;
 }
 

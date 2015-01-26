@@ -233,7 +233,7 @@ public:
 /**
  *	乘客信息
  */
-class pssenger_dto
+class passenger_dto
 {
 public:
 	std::string code;
@@ -257,7 +257,17 @@ public:
 	std::string recordCount;
 	std::string total_times;
 	std::string index_id;
-private:
+	std::string isUserSelf;
+
+	std::string print_test()
+	{
+		std::ostringstream osstr;
+		osstr << code << "\t" << passenger_name << "\t"
+			<< passenger_id_type_name << "\t"
+			<< passenger_id_no << "\t" << mobile_no << "\t"
+			;
+		return osstr.str();
+	}
 };
 
 class ticket_manage
@@ -273,7 +283,7 @@ public:
 		train_data_vec.clear();
 	}
 	// 登录初始化<获取dynamicJs请求地址,获取动态key>
-	bool login_init();
+	int login_init();
 	// 请求dynamic url地址，获取dynamicJs，从中提取动态key
 	bool get_dynamic_key(const std::string& dynamic_url);
 
@@ -312,7 +322,7 @@ public:
 	/**
 	 *	获取乘客信息
 	 */
-	bool get_passenger_dtos();
+	bool query_passengers();
 
 	/**
 	 *	get 系列函数
@@ -344,6 +354,8 @@ private:
 	std::vector<station_name> station_name_vec;
 	// 列车停靠站
 	stop_station m_stop_station;
+
+	std::vector<passenger_dto> passenger_dto_vec;
 };
 
 

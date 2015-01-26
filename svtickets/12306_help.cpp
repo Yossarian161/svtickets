@@ -8,12 +8,12 @@
 
 
 // 登录初始化<获取dynamicJs请求地址,获取动态key>
-bool ticket_manage::login_init()
+int ticket_manage::login_init()
 {
 	static const bool status = false;
 	if (!status)
 	{
-		//	_client.set_verbose();
+		_client.set_verbose();
 		_client.set_option(CURLOPT_FOLLOWLOCATION, true);
 		_client.set_cookies("data/cookie.txt");
 		_client.enable_accept_encoding(true);
@@ -28,13 +28,24 @@ bool ticket_manage::login_init()
 	if(!_client.open(url))
 	{
 		_error_buf = _client.get_error_buffer();
-		return false;
+		return -1;
 	}
 	
 	std::string reponse_str = _client.read_some();
 	convert_str("utf-8", "gbk", reponse_str);
 
 	int x_pos,d_pos;
+	
+	// 判断是否已登录
+	x_pos = reponse_str.find("sessionInit = '");
+	d_pos = reponse_str.find("'", x_pos+15);
+	std::string sub_str = reponse_str.substr(x_pos+15, d_pos-x_pos-15);
+	if (!sub_str.empty())
+	{
+		SVLOGGER_INFO << sub_str;
+		return 1;
+	}
+
 	x_pos = reponse_str.find("dynamicJs/");
 	if (x_pos != -1)
 	{
@@ -46,7 +57,7 @@ bool ticket_manage::login_init()
 		if(!_client.open(dynamic_url))
 		{
 			_error_buf = _client.get_error_buffer();
-			return false;
+			return -1;
 		}
 
 		//SVLOGGER_INFO << _client.read_some();
@@ -64,14 +75,14 @@ bool ticket_manage::login_init()
 
 		passcode_reflush();
 
-		return true;
+		return 0;
 	}
 	
 	//SVLOGGER_ERR << reponse_str;
 
 	passcode_reflush();
 
-	return false;
+	return -1;
 }
 
 bool ticket_manage::passcode_reflush(std::string img_path)
@@ -664,4 +675,112 @@ bool ticket_manage::query_stop_station(unsigned int index)
 	return true;
 }
 
+bool ticket_manage::query_passengers()
+{
+	std::string url = "https://kyfw.12306.cn/otn/passengers/init";
 
+	_client.set_post_fields(std::string("_json_att="));
+	
+	if (!_client.open(url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+	
+	std::string rep_str = _client.read_some();
+	convert_str("utf-8", "gbk", rep_str);
+	//SVLOGGER_DBG << rep_str;
+	
+	int x_pos = rep_str.find("totlePage");
+	int d_pos = rep_str.find(";", x_pos);
+	rep_str = rep_str.substr(x_pos+12, d_pos-x_pos-12);
+	SVLOGGER_DBG << rep_str;
+
+	//- post query down page.
+	url = "https://kyfw.12306.cn/otn/passengers/query";
+
+	request_header opts;
+	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/passengers/init"));
+	opts.insert(std::string("Accept-Encoding: gzip, deflate"));
+	opts.insert(std::string("Connection: Keep-Alive"));
+	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
+	_client.set_headers(opts);
+
+	std::ostringstream osstr;
+	osstr << "pageIndex=1&pageSize=" << atoi(rep_str.c_str())*10;
+	std::string post_str = osstr.str();
+	// 必须转换成 utf-8 格式,否则查询返回失败
+	convert_str("gbk", "utf-8", post_str);
+	_client.set_post_fields(post_str);
+
+	if (!_client.open(url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+
+	std::string reponse_str = _client.read_some();
+	convert_str("utf-8", "gbk", reponse_str);
+	SVLOGGER_DBG << reponse_str;
+
+	Json::Reader reader;
+	Json::Value reader_object;
+
+	if (!reader.parse(reponse_str, reader_object))
+	{
+		_error_buf = "返回json数据解析失败";
+		SVLOGGER_DBG << reponse_str;
+		return false;
+	}
+
+	if (!reader_object["status"].asBool() == true)
+	{
+		Json::Value msg = reader_object["messages"];
+		_error_buf =  msg[(unsigned int)0].asString();
+		return false;
+	}
+	else
+	{
+		passenger_dto_vec.clear();
+
+		Json::Value pax_data_obj = reader_object["data"]["datas"];
+		if (pax_data_obj.size() == 0)
+		{
+			_error_buf = reader_object["data"]["message"].asString();
+			SVLOGGER_ERR << _error_buf;
+			return false;
+		}
+		for (unsigned int idx = 0; idx < pax_data_obj.size(); ++idx)
+		{
+			passenger_dto pax_dto;
+			Json::Value pax_dto_obj = pax_data_obj[idx];
+			
+			pax_dto.code = pax_dto_obj["code"].asString();
+			pax_dto.passenger_name = pax_dto_obj["passenger_name"].asString();
+			pax_dto.sex_code = pax_dto_obj["sex_code"].asString();
+			pax_dto.sex_name = pax_dto_obj["sex_name"].asString();
+			pax_dto.born_date = pax_dto_obj["born_date"].asString();
+			pax_dto.country_code = pax_dto_obj["country_code"].asString();
+			pax_dto.passenger_id_type_code = pax_dto_obj["passenger_id_type_code"].asString();
+			pax_dto.passenger_id_type_name = pax_dto_obj["passenger_id_type_name"].asString();
+			pax_dto.passenger_id_no = pax_dto_obj["passenger_id_no"].asString();
+			pax_dto.passenger_type = pax_dto_obj["passenger_type"].asString();
+			pax_dto.passenger_flag = pax_dto_obj["passenger_flag"].asString();
+			pax_dto.passenger_type_name = pax_dto_obj["passenger_type_name"].asString();
+			pax_dto.mobile_no = pax_dto_obj["mobile_no"].asString();
+			pax_dto.phone_no = pax_dto_obj["phone_no"].asString();
+			pax_dto.email = pax_dto_obj["email"].asString();
+			pax_dto.address = pax_dto_obj["address"].asString();
+			pax_dto.postalcode = pax_dto_obj["postalcode"].asString();
+			pax_dto.first_letter = pax_dto_obj["first_letter"].asString();
+			pax_dto.recordCount = pax_dto_obj["recordCount"].asString();
+			pax_dto.isUserSelf = pax_dto_obj["isUserSelf"].asString();
+			pax_dto.total_times = pax_dto_obj["total_times"].asString();
+
+			SVLOGGER_DBG << pax_dto.print_test();
+
+			passenger_dto_vec.push_back(pax_dto);
+		}
+	}
+	return true;
+}
