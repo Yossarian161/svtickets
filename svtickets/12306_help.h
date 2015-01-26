@@ -30,6 +30,7 @@ public:
 
 	// 车票日期
 	inline std::string get_train_date(){ return train_date; }
+	inline std::string get_purpose_codes() { return purpose_codes; }
 	// 构造查询字符串
 	inline std::string get_query_string()
 	{
@@ -111,6 +112,7 @@ public:
 	std::string buttonTextInfo;
 
 	std::string train_date;
+	std::string purpose_codes;
 
 	std::string train_data_print()
 	{
@@ -282,7 +284,11 @@ public:
 	{
 		train_data_vec.clear();
 	}
-	// 登录初始化<获取dynamicJs请求地址,获取动态key>
+	// 
+	/**
+	 *	登录初始化<获取dynamicJs请求地址,获取动态key> --> 用于登录校验
+	 *  如已经登录返回1；正常登录成功返回0； 登录失败返回-1；
+	 */
 	int login_init();
 	// 请求dynamic url地址，获取dynamicJs，从中提取动态key
 	bool get_dynamic_key(const std::string& dynamic_url);
@@ -299,7 +305,7 @@ public:
 
 	// otn/modifyUser/initQueryUserInfo
 	bool init_user_info();
-
+	// 更新用户的登录状态 ??? >
 	bool update_user_login();
 
 	// 获取车站名称 列表 <车站输入控件值>
@@ -325,6 +331,16 @@ public:
 	bool query_passengers();
 
 	/**
+	 *	预定&提交
+	 */
+	// 登录用户检查
+	bool login_check_user();
+	// 车票预定 初始化页面 <获取用于预定车票时需要的dynamicKey&value>
+	bool left_ticket_init();
+	// 预定 按钮
+	bool submit_order_request(train_data& _train_data);
+
+	/**
 	 *	get 系列函数
 	 */
 	std::string get_username_cn(){ return user_name_cn; }
@@ -346,15 +362,18 @@ private:
 	std::string user_card_id;
 	std::string user_card_status;
 
-	// 车票数据 <预订数据>
+	// 车站名 <出发|到达站 输入控件值>
+	std::vector<station_name> station_name_vec;
+
+	// 车票数据 <预订查询数据>
 	std::vector<train_data> train_data_vec;
 	// 余票查询数据
 	std::vector<train_data> train_data_surplus_vec;
-	// 车站名 <出发|到达站 输入控件值>
-	std::vector<station_name> station_name_vec;
+	
 	// 列车停靠站
 	stop_station m_stop_station;
 
+	// 联系人信息 列表
 	std::vector<passenger_dto> passenger_dto_vec;
 };
 

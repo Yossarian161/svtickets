@@ -38,7 +38,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	//
-	_manage.query_passengers();
+	//_manage.query_passengers();
+	
+	_manage.left_ticket_init();
 
 //	_manage.login_out();
 _error:

@@ -13,9 +13,10 @@ namespace svlogger
 	bool read_file(const std::string file_path, std::string& str_output);
 
 	/* 获取当前时间，返回时间字符串格式:[yyyy-mm-dd hh24:mi:ss]
-	 * only_time = true，返回时间格式: [hh24:mi:ss.ms]
+	 * time_type = 1，返回时间格式: [hh24:mi:ss.ms]
+	 * time_type = 2, 返回日期格式: [yyyy-mm-dd]
 	 */
-	std::string get_now_time(bool only_times = false);
+	std::string get_now_time(int time_type = 0);
 
 	// 定义logger 信息等级
 	static std::string LOGGER_DEBUG_STR = "DEBUG";

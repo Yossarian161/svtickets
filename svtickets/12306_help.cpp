@@ -13,7 +13,7 @@ int ticket_manage::login_init()
 	static const bool status = false;
 	if (!status)
 	{
-		_client.set_verbose();
+		//_client.set_verbose();
 		_client.set_option(CURLOPT_FOLLOWLOCATION, true);
 		_client.set_cookies("data/cookie.txt");
 		_client.enable_accept_encoding(true);
@@ -40,12 +40,13 @@ int ticket_manage::login_init()
 	x_pos = reponse_str.find("sessionInit = '");
 	d_pos = reponse_str.find("'", x_pos+15);
 	std::string sub_str = reponse_str.substr(x_pos+15, d_pos-x_pos-15);
-	if (!sub_str.empty())
+	if (!sub_str.empty())	// cookies已经登录
 	{
 		SVLOGGER_INFO << sub_str;
 		return 1;
 	}
 
+	// 走正常登录流程
 	x_pos = reponse_str.find("dynamicJs/");
 	if (x_pos != -1)
 	{
@@ -127,7 +128,7 @@ bool ticket_manage::passcode_verify(std::string passcode_str)
 	std::string post_str;
 	post_str = "randCode=" + passcode_str;
 	post_str += "&rand=sjrand&randCode_validate=";
-
+	convert_str("gbk", "utf-8", post_str);
 	_client.set_post_fields(post_str);
 	
 	std::string str_url = "https://kyfw.12306.cn/otn/passcodeNew/checkRandCodeAnsyn";
@@ -488,6 +489,7 @@ bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 
 			// 
 			t_data.train_date = ticket_dto.get_train_date();
+			t_data.purpose_codes = ticket_dto.get_purpose_codes();
 
 			SVLOGGER_DBG << t_data.train_data_print();
 
@@ -595,6 +597,7 @@ bool ticket_manage::query_train_data_surplus( left_ticket_dto& ticket_dto )
 
 			// 
 			t_data.train_date = ticket_dto.get_train_date();
+			t_data.purpose_codes = ticket_dto.get_purpose_codes();
 
 			SVLOGGER_DBG << t_data.train_data_print();
 
@@ -677,6 +680,9 @@ bool ticket_manage::query_stop_station(unsigned int index)
 
 bool ticket_manage::query_passengers()
 {
+	/**
+	 *	发包获取联系人总页数
+	 */
 	std::string url = "https://kyfw.12306.cn/otn/passengers/init";
 
 	_client.set_post_fields(std::string("_json_att="));
@@ -696,7 +702,9 @@ bool ticket_manage::query_passengers()
 	rep_str = rep_str.substr(x_pos+12, d_pos-x_pos-12);
 	SVLOGGER_DBG << rep_str;
 
-	//- post query down page.
+	/**
+	 *	根据获取到的总页数，一次性查询所有联系人信息
+	 */
 	url = "https://kyfw.12306.cn/otn/passengers/query";
 
 	request_header opts;
@@ -745,11 +753,12 @@ bool ticket_manage::query_passengers()
 
 		Json::Value pax_data_obj = reader_object["data"]["datas"];
 		if (pax_data_obj.size() == 0)
-		{
+		{  // 查询失败.
 			_error_buf = reader_object["data"]["message"].asString();
 			SVLOGGER_ERR << _error_buf;
 			return false;
 		}
+
 		for (unsigned int idx = 0; idx < pax_data_obj.size(); ++idx)
 		{
 			passenger_dto pax_dto;
@@ -784,3 +793,168 @@ bool ticket_manage::query_passengers()
 	}
 	return true;
 }
+
+bool ticket_manage::login_check_user()
+{
+	std::string url = "https://kyfw.12306.cn/otn/login/checkUser";
+
+	request_header opts;
+	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/leftTicket/init"));
+	opts.insert(std::string("Accept-Encoding: gzip, deflate"));
+	opts.insert(std::string("Connection: Keep-Alive"));
+	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
+	_client.set_headers(opts);
+
+	std::string post_str = "_json_att=";
+	convert_str("gbk", "utf-8", post_str);
+	_client.set_post_fields(post_str);
+
+	if (!_client.open(url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+
+	std::string reponse_str = _client.read_some();
+	convert_str("utf-8", "gbk", reponse_str);
+
+	Json::Reader reader;
+	Json::Value reader_object;
+
+	if (!reader.parse(reponse_str, reader_object))
+	{
+		_error_buf = "返回json数据解析失败";
+		SVLOGGER_DBG << reponse_str;
+		return false;
+	}
+
+	if (!reader_object["status"].asBool() == true)
+	{
+		Json::Value msg = reader_object["messages"];
+		_error_buf =  msg[(unsigned int)0].asString();
+		return false;
+	}
+
+	return true;
+}
+
+bool ticket_manage::left_ticket_init()
+{
+	/**
+	 *	获取dynamicjs 请求url
+	 */
+	std::string url = "https://kyfw.12306.cn/otn/leftTicket/init";
+	if(!_client.open(url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+	
+	std::string reponse_str = _client.read_some();
+	convert_str("utf-8", "gbk", reponse_str);
+
+	int x_pos,d_pos;
+	x_pos = reponse_str.find("dynamicJs/");
+	if (x_pos != -1)
+	{
+		d_pos = reponse_str.find("\"", x_pos+10);
+		std::string dynamic_url = "https://kyfw.12306.cn/otn/dynamicJs/" + reponse_str.substr(x_pos+10, d_pos-x_pos-10);
+		SVLOGGER_INFO << dynamic_url;
+		
+		// 请求dynamicJs地址，获取dynamic key
+		if(!_client.open(dynamic_url))
+		{
+			_error_buf = _client.get_error_buffer();
+			return false;
+		}
+
+		reponse_str = _client.read_some();
+		convert_str("utf-8", "gbk", reponse_str);
+
+		x_pos = reponse_str.find("key='");
+		d_pos = reponse_str.find("'", x_pos+5);
+
+		dynamic_key = reponse_str.substr(x_pos+5, d_pos-x_pos-5);
+		SVLOGGER_DBG << dynamic_key;
+
+		dynamic_value = encode32(bin216(base32_encrypt("1111", dynamic_key)));
+		SVLOGGER_DBG << dynamic_value;
+	}
+	return true;
+}
+
+bool ticket_manage::submit_order_request( train_data& _train_data )
+{
+	if (!login_check_user())
+	{
+		// 用户登录验证失败<用户未登录>
+		return false;
+	}
+
+	if (!left_ticket_init())
+	{
+		return false;
+	}
+
+	std::string url = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest";
+
+	request_header opts;
+	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/leftTicket/init"));
+	opts.insert(std::string("Accept-Encoding: gzip, deflate"));
+	opts.insert(std::string("Connection: Keep-Alive"));
+	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
+	_client.set_headers(opts);
+
+	std::ostringstream osstr;
+	osstr << _client.str_escape(dynamic_key) << "=" << _client.str_escape(dynamic_value)
+		<< "&myversion=undefined&secretStr=" << _train_data.secretStr
+		<< "&train_date=" << _train_data.train_date
+		<< "&back_train_date=" << svlogger::get_now_time(2)
+		<< "&tour_flag=dc&purpose_codes=" << _train_data.purpose_codes
+		<< "&query_from_station_name=" << _train_data.from_station_name
+		<< "&query_to_station_name=" << _train_data.to_station_name
+		<< "&undefined";
+
+	SVLOGGER_DBG << osstr.str();
+
+	std::string post_str = osstr.str();
+	convert_str("gbk", "utf-8", post_str);
+	_client.set_post_fields(post_str);
+
+	if (!_client.open(url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+
+	std::string reponse_str = _client.read_some();
+	convert_str("utf-8", "gbk", reponse_str);
+	SVLOGGER_DBG << reponse_str;
+
+	Json::Reader reader;
+	Json::Value reader_object;
+
+	if (!reader.parse(reponse_str, reader_object))
+	{
+		_error_buf = "返回json数据解析失败";
+		SVLOGGER_DBG << reponse_str;
+		return false;
+	}
+
+	if (!reader_object["status"].asBool() == true)
+	{
+		Json::Value msg = reader_object["messages"];
+		_error_buf =  msg[(unsigned int)0].asString();
+		return false;
+	}
+
+	/**
+	 *	initDc
+	 */
+
+	return true;
+}
+
+
+
+
