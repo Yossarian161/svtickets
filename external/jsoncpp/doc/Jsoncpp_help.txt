@@ -1,0 +1,135 @@
+/*
+ *   Jsoncpp 详解
+ */
+
+Jsoncpp是一个使用C++语言实现的面向对象的json库。
+Jsoncpp提供的接口中有3个核心类：Reader、Writer、Value
+
+Reader 类负责从字符串或者输入流中加载JSON文档，并进行解析，生成代表JSON文档的Value对象。 
+Writer 类负责将内存中的Value对象转换成JSON文档，可输出到文件或者是字符串中。 
+Value  类的对象代表一个JSON值，既可以代表一个文档，也可以代表文档中一个值。 
+
+JSON文档解析的大致过程如下：
+
+//0. 准备Json源数据，如读取文档：
+Std::string strdoc = readFromFile(… );
+
+//1. 生命顶级Value对象 
+Json::Value root;
+
+//2. 声明Reader对象
+Json::Reader _reader;
+
+//3. 解析json文档
+_reader.paser(strdoc, root); 
+
+Json::ValueType有8种，以下是定义。 
+   enum Json::ValueType
+   Enumerator: 
+   nullValue 　　   'null' value 
+   intValue 　　　　signed integer value 
+   uintValue 　　   unsigned integer value 
+   realValue 　　   double value 
+   stringValue 　　 UTF-8 string value. 
+   booleanValue 　　bool value 
+   arrayValue 　　  array value (ordered list) 
+   objectValue 　　 object value (collection of name/value pairs).
+
+/*---------------------------------------------------------------------*/
+一. 通过Reader、Value类对Json对象 进行基本操作
+
+1) Json::Reader 是用于读取Json对象的值。
+用法：
+    Json::Value reader_object;
+    Json::Reader reader;
+    const char* reader_document = "{"path" : "/home/test.mp3","size" : 4000}";
+    if (!reader.parse(reader_document, reader_object))
+        return 0;
+    std::cout << reader_object["path"] << std::endl;
+    std::cout << reader_object["size"] << std::endl;
+ 结果：
+    "/home/test.mp3"
+    4000 
+
+2) 增加子节点
+
+    Json::Value root;
+    Json::Value leaf;
+
+　  root["leaf_node"] = leaf;
+
+3) 值为数组的，通过对同一key逐个append方式追加：
+
+    root["key_array"].append("the string");　　//元素值类型为字符串
+
+    root["key_array"].append(20);       //元素值类型同时可为int等等
+
+4) 解析数组值
+
+    JArray = root["key_array"];
+    for ( unsigned int i = 0; i < JArray.size(); i++ )
+    {
+        cout << "JSON array values: " << JArray[i].asString() << endl;
+    }
+
+   json对数组的解析还支持STL的风格。即
+
+    Json::Value::Members member;	
+    //Members  这玩意就是vector<string>，typedef了而已
+    for (Json::Value::iterator itr = objArray.begin(); 
+        itr != objArray.end(); itr++ )
+    {
+       member = (*itr).getMemberNames();
+		for (Json::Value::Members::iterator iter = member.begin(); 
+	    		iter != member.end(); iter++ )
+		{
+	    		string str_temp = (*itr)[(*iter)].asString();
+		}
+    }
+
+5) 注意操作符[]的定义：
+
+Value& Json::Value::operator[] ( const StaticString & key )
+//Access an object value by name, create a null member if it does not exist.
+
+因此但凡使用[]或者通过get()间接使用[]的，若原来元素不存在，都将增加一个value为nul的新元素。
+
+事先判断某名称的元素是否存在可以使用 isMember():
+
+if(root.isObject() && root.isMember("path") )
+{ ... }
+
+6) JSON文档格式输出: 
+   std::cout << value.toStyledString();
+
+   Json::Value::toStyledString() 实现
+   std::string 
+   Value::toStyledString() const
+   {
+     StyledWriter writer;
+     return writer.write( *this );
+   }
+
+二. 通过使用Writer将Value转换为JSON文档(string):
+
+1) Json::FastWriter用来快速输出Json对象的值，即。
+
+用法：
+   Json::FastWriter writer;
+   std::cout << writer.write(reader_object)<< std::endl;
+
+结果:
+   { "path" : "/home/test.mp3","size" : 4000 }
+
+2) Json::StyledWriter用来格式化输出Json对象的值。
+
+用法：
+   Json::StyledWriter writer;
+   std::cout << writer.write(reader_object) << std::endl;
+结果:
+    {
+       "path" : "/home/test.mp3",
+       "size" : 4000
+    }
+
+

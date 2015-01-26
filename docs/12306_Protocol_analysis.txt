@@ -1,0 +1,661 @@
+
+https://kyfw.12306.cn/otn/login/init
+
+/>===========
+验证码刷新:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&0.18488682377115606 HTTP/1.1
+Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5
+Referer: https://kyfw.12306.cn/otn/login/init
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Accept-Encoding: gzip, deflate
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=04779135556C1DD1281FA856E7236F0D; JSESSIONID=F25CD63A28C59197F2CDE03B81B59617; current_captcha_type=C; BIGipServerotn=1893269770.50210.0000
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Sat, 10 Jan 2015 08:22:36 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_112
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: current_captcha_type=C; Path=/
+Content-Type: image/jpeg;charset=UTF-8
+Content-Length: 1836
+X-Via: 1.1 sz49:0 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+>/JPG图像内容 
+
+/>===========
+验证码自动校验
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/passcodeNew/checkRandCodeAnsyn HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/login/init
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 44
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=04779135556C1DD1281FA856E7236F0D; JSESSIONID=F25CD63A28C59197F2CDE03B81B59617; current_captcha_type=C; BIGipServerotn=1893269770.50210.0000
+
+randCode=v32q&rand=sjrand&randCode_validate=
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Sat, 10 Jan 2015 08:17:47 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_112
+Content-Type: application/json;charset=UTF-8
+Content-Length: 157
+X-Via: 1.1 sz49:4 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+//-> 验证码正确
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"result":"1","msg":"randCodeRight"},"messages":[],"validateMessages":{}}
+//-> 验证码错误
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"result":"0","msg":"randCodeError"},"messages":[],"validateMessages":{}}
+
+//*----------
+login_messages={randCodeError:"验证码错误!",randCodeExpired:"验证码失效",randCodeLentgh:"验证码长度为4位!",randCodeFormat:"验证码只能由数字或字母组成!",randCodeEmpty:"验证码不能为空!",userNameEmpty:"登录名必须填写!",userNameFormat:"登录名格式不正确，请重新输入!",passwordEmpty:"密码必须填写,且不少于6位!",passwordLength:"密码长度不能少于6位!",pleaseClickCaptcha:"请点击验证码",pleaseClickLeftCaptcha:"请点击左侧验证码",pleaseClickCaptchaRight:"请正确点击验证码",loginError:"当前访问用户过多,请稍候重试!"};
+--*//
+
+
+/>===========
+登录操作
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[1]
+/>> 验证码校验
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[2]
+POST /otn/login/loginAysnSuggest HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/login/init
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 145
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=04779135556C1DD1281FA856E7236F0D; JSESSIONID=F25CD63A28C59197F2CDE03B81B59617; current_captcha_type=C; BIGipServerotn=1893269770.50210.0000
+
+loginUserDTO.user_name=byxing&userDTO.password=yaxxxxx&randCode=eqdy&randCode_validate=&NDQzNDg4=ZTkxMmU1MTY1NzM1ZDcxMw%3D%3D&myversion=undefined
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Sat, 10 Jan 2015 08:28:26 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_112
+Content-Type: application/json;charset=UTF-8
+Content-Length: 198
+X-Via: 1.1 sz49:4 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+//- 密码失败返回信息
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{},"messages":["密码输入错误。如果输错次数超过4次，用户将被锁定。"],"validateMessages":{}}
+
+//-> 密码正确返回信息
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"loginCheck":"Y"},"messages":[],"validateMessages":{}}
+
+
+/>===========
+车票查询操作 <2次发包操作>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[第一次发包操作]
+GET /otn/leftTicket/log?leftTicketDTO.train_date=2015-02-25&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=SZQ&purpose_codes=ADULT HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept: */*
+If-Modified-Since: 0
+Cache-Control: no-cache
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toStation=%u6DF1%u5733%2CSZQ; _jc_save_fromDate=2015-02-25; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:36:55 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 113
+X-Via: 1.1 sz50:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"messages":[],"validateMessages":{}}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[第2次发包操作]
+GET /otn/leftTicket/queryT?leftTicketDTO.train_date=2015-02-25&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=SZQ&purpose_codes=ADULT HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept: */*
+If-Modified-Since: 0
+Cache-Control: no-cache
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toStation=%u6DF1%u5733%2CSZQ; _jc_save_fromDate=2015-02-25; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:36:35 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Content-Encoding: gzip
+Age: 1
+X-Via: 1.1 sz50:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+Cache-Control: no-cache, no-store
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":[{"queryLeftNewDTO":{"train_no":"2400000G7108","station_train_code":"G71","start_station_telecode":"BXP","start_station_name":"北京西","end_station_telecode":"IOQ","end_station_name":"深圳北","from_station_telecode":"BXP","from_station_name":"北京西","to_station_telecode":"IOQ","to_station_name":"深圳北","start_time":"07:45","arrive_time":"17:53","day_difference":"0","train_class_name":"","lishi":"10:08","canWebBuy":"N","lishiValue":"608","yp_info":"O093650000M1479500009292350000","control_train_day":"20201231","start_train_date":"20150225","seat_feature":"O3M393","yp_ex":"O0M090","train_seat_feature":"3","seat_types":"OM9","location_code":"P2","from_station_no":"01","to_station_no":"17","control_day":59,"sale_time":"0800","is_support_card":"1","gg_num":"--","gr_num":"--","qt_num":"--","rw_num":"--","rz_num":"--","tz_num":"--","wz_num":"--","yb_num":"--","yw_num":"--","yz_num":"--","ze_num":"无","zy_num":"无","swz_num":"无"},"secretStr":"","buttonTextInfo":"预订"},{"queryLeftNewDTO":{"train_no":"240000Z10700","station_train_code":"Z107","start_station_telecode":"BXP","start_station_name":"北京西","end_station_telecode":"SZQ","end_station_name":"深圳","from_station_telecode":"BXP","from_station_name":"北京西","to_station_telecode":"SZQ","to_station_name":"深圳","start_time":"19:55","arrive_time":"17:51","day_difference":"1","train_class_name":"","lishi":"21:56","canWebBuy":"Y","lishiValue":"1316","yp_info":"1025453075406875000010254500003043450000","control_train_day":"20201231","start_train_date":"20150225","seat_feature":"W3431333","yp_ex":"10401030","train_seat_feature":"3","seat_types":"1413","location_code":"P3","from_station_no":"01","to_station_no":"10","control_day":59,"sale_time":"0800","is_support_card":"0","gg_num":"--","gr_num":"--","qt_num":"--","rw_num":"无","rz_num":"--","tz_num":"--","wz_num":"有","yb_num":"--","yw_num":"无","yz_num":"无","ze_num":"--","zy_num":"--","swz_num":"--"},"secretStr":"MjAxNS0wMi0yNSMwMCNaMTA3IzIxOjU2IzE5OjU1IzI0MDAwMFoxMDcwMCNCWFAjU1pRIzE3OjUxI%2BWMl%2BS6rOilvyPmt7HlnLMjMDEjMTAjMTAyNTQ1MzA3NTQwNjg3NTAwMDAxMDI1NDUwMDAwMzA0MzQ1MDAwMCNQMyMxNDIxODQ3Mzk1NTg1IzNFOUNDQUQ0NDEzNUYwQUY1MDQ4MDFBRjY2Q0YxOEQ5MjY4RjEyNUQ3QjU3RjZENEIyNjQ1Rjg3","buttonTextInfo":"预订"}],"messages":[],"validateMessages":{}}
+
+/>===========
+停靠站查询
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /otn/czxx/queryByTrainNo?train_no=57000K101930&from_station_telecode=THG&to_station_telecode=SZQ&depart_date=2015-02-25 HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept: */*
+If-Modified-Since: 0
+Cache-Control: no-cache
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u6DF1%u5733%2CSZQ; _jc_save_fromDate=2015-02-25; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:42:36 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1570
+X-Via: 1.1 sz50:5 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"data":[{"start_station_name":"九江","arrive_time":"----","station_train_code":"K1019","station_name":"九江","train_class_name":"快速","service_type":"2","start_time":"15:40","stopover_time":"----","end_station_name":"深圳","station_no":"01","isEnabled":false},{"arrive_time":"17:16","station_name":"南昌西","start_time":"17:28","stopover_time":"12分钟","station_no":"02","isEnabled":false},{"arrive_time":"19:04","station_name":"新干","start_time":"19:15","stopover_time":"11分钟","station_no":"05","isEnabled":false},{"arrive_time":"19:30","station_name":"峡江","start_time":"19:40","stopover_time":"10分钟","station_no":"06","isEnabled":false},{"arrive_time":"20:35","station_name":"吉安","start_time":"20:41","stopover_time":"6分钟","station_no":"07","isEnabled":false},{"arrive_time":"21:05","station_name":"泰和","start_time":"21:17","stopover_time":"12分钟","station_no":"08","isEnabled":true},{"arrive_time":"22:28","station_name":"兴国","start_time":"22:31","stopover_time":"3分钟","station_no":"09","isEnabled":true},{"arrive_time":"23:37","station_name":"赣州","start_time":"23:41","stopover_time":"4分钟","station_no":"10","isEnabled":true},{"arrive_time":"05:13","station_name":"惠州","start_time":"05:19","stopover_time":"6分钟","station_no":"15","isEnabled":true},{"arrive_time":"06:58","station_name":"深圳","start_time":"06:58","stopover_time":"----","station_no":"16","isEnabled":true}]},"messages":[],"validateMessages":{}}
+
+
+/>==============
+提交订单
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[1]
+POST /otn/login/checkUser HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept: */*
+If-Modified-Since: 0
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Cache-Control: no-cache
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 10
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+_json_att=
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:49:08 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 134
+X-Via: 1.1 sz50:1 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"flag":true},"messages":[],"validateMessages":{}}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[2]  post数据utf-8编码
+POST /otn/leftTicket/submitOrderRequest HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 484
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+MjQxODM2=YzMyMGY5ZTg2NWE0NWQ1Zg%3D%3D&myversion=undefined&secretStr=MjAxNS0wMi0wMiMwMCNLODcyNCMwMDoyNCMxNToxOSM1NzAwMEs4NzI0MDcjVEhHI1ZBRyMxNTo0MyPms7Dlkowj5ZCJ5a6JIzA1IzA2IzEwMDAwMDMwNjI0MDAwMDAwMDI4MTAwMDAwMDExOTMwMDAwMDAwODAjRzIjMTQyMTg0ODExMjE1MyNFRjVCNkNGNDE4M0I0RTUyNzVDRjdBQ0RCM0FFRTBGNkYwRUY0NDMyM0FBOUU3QjU3QzQ1QzI2OA%3D%3D&train_date=2015-02-02&back_train_date=2015-01-21&tour_flag=dc&purpose_codes=ADULT&query_from_station_name=娉板拰&query_to_station_name=鍚夊畨&undefined
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:49:08 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 113
+X-Via: 1.1 sz50:1 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"messages":[],"validateMessages":{}}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>[3]
+POST /otn/confirmPassenger/initDc HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: https://kyfw.12306.cn/otn/leftTicket/init
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: kyfw.12306.cn
+Content-Length: 10
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+_json_att=
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:49:08 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: text/html;charset=utf-8
+Content-Language: zh-CN
+Transfer-Encoding: chunked
+Content-Encoding: gzip
+X-Via: 1.1 sz50:1 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+/>================
+订单提交 <拉取乘客信息> 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/confirmPassenger/getPassengerDTOs HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 63
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:49:09 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Content-Encoding: gzip
+X-Via: 1.1 sz50:2 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"isExist":true,"exMsg":"","two_isOpenClick":["93","95","97","99"],"other_isOpenClick":["91","93","98","99","95","97"],"normal_passengers":[{"code":"32","passenger_name":"杨xx","sex_code":"M","sex_name":"男","born_date":"1989-12-14 00:00:00","country_code":"CN","passenger_id_type_code":"1","passenger_id_type_name":"二代身份证","passenger_id_no":"3624xxxxxxx757","passenger_type":"1","passenger_flag":"0","passenger_type_name":"成人","mobile_no":"18588280803","phone_no":"","email":"511852622@qq.com","address":"","postalcode":"","first_letter":"","recordCount":"52","total_times":"99","index_id":"0"},{"code":"52","passenger_name":"陈晓x","sex_code":"F","sex_name":"女","born_date":"1988-12-12 00:00:00","country_code":"CN","passenger_id_type_code":"1","passenger_id_type_name":"二代身份证","passenger_id_no":"3624xxxxxxxxx321","passenger_type":"1","passenger_flag":"0","passenger_type_name":"成人","mobile_no":"","phone_no":"","email":"","address":"","postalcode":"","first_letter":"CXX","recordCount":"52","total_times":"99","index_id":"1"}],"dj_passengers":[]},"messages":[],"validateMessages":{}}
+
+==========================================================
+
+订单提交 <拉取验证码> 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp& HTTP/1.1
+Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Accept-Encoding: gzip, deflate
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 13:49:09 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: current_captcha_type=C; Path=/
+Content-Type: image/jpeg;charset=UTF-8
+Content-Length: 1863
+X-Via: 1.1 sz50:1 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+/>.png图片内容
+
+订单提交 <验证码验证>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/passcodeNew/checkRandCodeAnsyn HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 88
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+randCode=kdpm&rand=randp&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:15:58 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 157
+X-Via: 1.1 sz53:0 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"result":"1","msg":"randCodeRight"},"messages":[],"validateMessages":{}}
+
+订单提交 <订单信息check>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/confirmPassenger/checkOrderInfo HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 369
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=1%2C0%2C1%2C%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C13410681210%2CN&oldPassengerStr=%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C1_&tour_flag=dc&randCode=kdpm&ODEwMzUz=NGYxOTVkOWQxNjI0Mjg5YQ%3D%3D&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:15:58 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 142
+X-Via: 1.1 sz53:0 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"submitStatus":true},"messages":[],"validateMessages":{}}
+
+
+订单提交 <获取排队人数...>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+POST /otn/confirmPassenger/getQueueCount HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 284
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+train_date=Mon+Feb+2+00%3A00%3A00+UTC%2B0800+2015&train_no=57000K872407&stationTrainCode=K8724&seatType=1&fromStationTelecode=THG&toStationTelecode=VAG&leftTicket=1000903062400815002810009001193005500080&purpose_codes=00&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:15:58 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 229
+X-Via: 1.1 sz53:0 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"count":"0","ticket":"1000903434400815002810009007213005500340","op_2":"false","countT":"0","op_1":"false"},"messages":[],"validateMessages":{}}
+
+订单提交 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/confirmPassenger/confirmSingleForQueue HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 427
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+passengerTicketStr=1%2C0%2C1%2C%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C13410681210%2CN&oldPassengerStr=%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C1_&randCode=kdpm&purpose_codes=00&key_check_isChange=5BA33BD59950B1285C2F82B796D9394E98F879CF8047B284B0A43A7D&leftTicketStr=1000003062400000002810000001193000000080&train_location=G2&dwAll=N&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:16:17 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 142
+X-Via: 1.1 sz53:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"submitStatus":true},"messages":[],"validateMessages":{}}
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /otn/confirmPassenger/queryOrderWaitTime?random=1421849778086&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:16:17 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 254
+X-Via: 1.1 sz53:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"queryOrderWaitTimeStatus":true,"count":0,"waitTime":4,"requestId":5963670209209528411,"waitCount":2,"tourFlag":"dc","orderId":null},"messages":[],"validateMessages":{}}
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+GET /otn/confirmPassenger/queryOrderWaitTime?random=1421849781124&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+DNT: 1
+Connection: Keep-Alive
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,,
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:16:22 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 263
+X-Via: 1.1 sz53:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"queryOrderWaitTimeStatus":true,"count":0,"waitTime":-1,"requestId":5963670209209528411,"waitCount":0,"tourFlag":"dc","orderId":"EC11881637"},"messages":[],"validateMessages":{}}
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/confirmPassenger/resultOrderForDcQueue HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 91
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+orderSequence_no=EC11881637&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:16:23 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 142
+X-Via: 1.1 sz53:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"submitStatus":true},"messages":[],"validateMessages":{}}
+
+
+订单信息页面 <待支付>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..
+POST /otn//payOrder/init?random=1421849783292 HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: https://kyfw.12306.cn/otn/confirmPassenger/initDc
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: kyfw.12306.cn
+Content-Length: 63
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:16:23 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: text/html;charset=utf-8
+Content-Language: zh-CN
+Transfer-Encoding: chunked
+Content-Encoding: gzip
+X-Via: 1.1 sz53:6 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+
+取消订单
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /otn/payOrder/cancel HTTP/1.1
+x-requested-with: XMLHttpRequest
+Accept-Language: zh-cn
+Referer: https://kyfw.12306.cn/otn//payOrder/init?random=1421849783292
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Host: kyfw.12306.cn
+Content-Length: 3315
+DNT: 1
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
+
+sequence_no=EC11881637&parOrderDTOJson=%7B%22sequence_no%22%3A%22EC11881637%22%2C%22order_date%22%3A%222015-01-21+00%3A00%3A00%22%2C%22ticket_totalnum%22%3A1%2C%22ticket_price_all%22%3A900.0%2C%22epayFlag%22%3A%22Y%22%2C%22orders%22%3A%5B%7B%22sequence_no%22%3A%22EC11881637%22%2C%22order_date%22%3A%222015-01-21+00%3A00%3A00%22%2C%22ticket_totalnum%22%3A1%2C%22ticket_price_all%22%3A900.0%2C%22tickets%22%3A%5B%7B%22stationTrainDTO%22%3A%7B%22station_train_code%22%3A%22K8724%22%2C%22from_station_telecode%22%3A%22THG%22%2C%22from_station_name%22%3A%22%E6%B3%B0%E5%92%8C%22%2C%22start_time%22%3A%221970-01-01+15%3A19%3A00%22%2C%22to_station_telecode%22%3A%22VAG%22%2C%22to_station_name%22%3A%22%E5%90%89%E5%AE%89%22%2C%22arrive_time%22%3A%221970-01-01+15%3A43%3A00%22%2C%22distance%22%3A%2234%22%7D%2C%22passengerDTO%22%3A%7B%22passenger_name%22%3A%22%E6%B6%82%E8%87%AA%E5%BC%BA%22%2C%22passenger_id_type_code%22%3A%221%22%2C%22passenger_id_type_name%22%3A%22%E4%BA%8C%E4%BB%A3%E8%BA%AB%E4%BB%BD%E8%AF%81%22%2C%22passenger_id_no%22%3A%22360121198811094211%22%2C%22mobile_no%22%3A%2213410681210%22%2C%22total_times%22%3A%2298%22%7D%2C%22ticket_no%22%3A%22EC118816371170029%22%2C%22sequence_no%22%3A%22EC11881637%22%2C%22batch_no%22%3A%221%22%2C%22train_date%22%3A%222015-02-02+00%3A00%3A00%22%2C%22coach_no%22%3A%2217%22%2C%22coach_name%22%3A%2217%22%2C%22seat_no%22%3A%220029%22%2C%22seat_name%22%3A%22029%E5%8F%B7%22%2C%22seat_flag%22%3A%220%22%2C%22seat_type_code%22%3A%221%22%2C%22seat_type_name%22%3A%22%E7%A1%AC%E5%BA%A7%22%2C%22ticket_type_code%22%3A%221%22%2C%22ticket_type_name%22%3A%22%E6%88%90%E4%BA%BA%E7%A5%A8%22%2C%22reserve_time%22%3A%222015-01-21+00%3A00%3A00%22%2C%22limit_time%22%3A%222015-01-21+22%3A16%3A18%22%2C%22lose_time%22%3A%222015-01-21+23%3A01%3A18%22%2C%22pay_limit_time%22%3A%222015-01-21+23%3A01%3A18%22%2C%22realize_time_char%22%3A%222015-01-21+22%3A16%3A18%22%2C%22ticket_price%22%3A900.0%2C%22old_ticket_price%22%3A0.0%2C%22return_total%22%3A900.0%2C%22return_cost%22%3A0.0%2C%22pay_mode_code%22%3A%22Y%22%2C%22payOrderString%22%3A%222015-01-21+22%3A16%3A18%22%2C%22payOrderId%22%3A%221EC11881637001001221618170%22%2C%22amount%22%3A%22900%22%2C%22amount_char%22%3A1%2C%22start_train_date_page%22%3A%222015-02-02+15%3A19%22%2C%22str_ticket_price_page%22%3A%229.0%22%2C%22come_go_traveller_ticket_page%22%3A%22N%22%7D%5D%2C%22isNeedSendMailAndMsg%22%3A%22N%22%2C%22ticket_total_price_page%22%3A%229.0%22%2C%22come_go_traveller_order_page%22%3A%22N%22%2C%22canOffLinePay%22%3A%22N%22%7D%5D%7D&orderRequestDTOJson=%7B%22bureau_code%22%3A%22G%22%2C%22train_location%22%3A%22G2%22%2C%22train_date%22%3A%222015-02-02+00%3A00%3A00%22%2C%22train_no%22%3A%2257000K872407%22%2C%22station_train_code%22%3A%22K8724%22%2C%22from_station_telecode%22%3A%22THG%22%2C%22to_station_telecode%22%3A%22VAG%22%2C%22from_station_name%22%3A%22%E6%B3%B0%E5%92%8C%22%2C%22to_station_name%22%3A%22%E5%90%89%E5%AE%89%22%2C%22seat_type_code%22%3A%221%22%2C%22seat_detail_type_code%22%3A%220%22%2C%22start_time%22%3A%221970-01-01+15%3A19%3A00%22%2C%22end_time%22%3A%221970-01-01+15%3A43%3A00%22%2C%22adult_num%22%3A0%2C%22child_num%22%3A0%2C%22student_num%22%3A0%2C%22disability_num%22%3A0%2C%22ticket_num%22%3A0%2C%22id_mode%22%3A%22Y%22%2C%22reserve_flag%22%3A%22A%22%2C%22tour_flag%22%3A%22dc%22%7D&_json_att=
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2015 14:30:09 GMT
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.5; JBoss-5.0/JBossWeb-2.1
+ct: c1_45
+Content-Type: application/json;charset=UTF-8
+Content-Length: 142
+X-Via: 1.1 sz53:2 (Cdn Cache Server V2.0)
+Connection: keep-alive
+
+{"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"cancelStatus":true},"messages":[],"validateMessages":{}}
+
+
+
+
+
+
+
+
+
+
+
+
+
