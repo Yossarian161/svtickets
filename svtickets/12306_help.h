@@ -293,10 +293,10 @@ public:
 	// 请求dynamic url地址，获取dynamicJs，从中提取动态key
 	bool get_dynamic_key(const std::string& dynamic_url);
 
-	// 验证码刷新
-	bool passcode_reflush(std::string img_path = "data/pass.png");
-	// 验证码校验
-	bool passcode_verify(std::string passcode_str);
+	// 登录验证码刷新
+	bool login_passcode_reflush(std::string img_path = "data/pass.png");
+	// 登录验证码校验
+	bool login_passcode_verify(std::string passcode_str);
 	// 登录验证
 	bool login_verify(const std::string& user_name, const std::string& passwd, const std::string& passcode);
 
@@ -339,6 +339,17 @@ public:
 	bool left_ticket_init();
 	// 预定 按钮
 	bool submit_order_request(train_data& _train_data);
+	/**
+	 *  获取单程车票的预订确认页面 ../initDC
+	 *  解析获取 globalRepeatSubmitToken & dynamicKey=value
+	 */ 
+	bool confirm_passenger_initdc();
+	// 预定确认验证码刷新
+	bool passenger_passcode_reflush(std::string img_path = "data/pass.png");
+	// 预定确认验证码校验
+	bool passenger_passcode_verify(std::string passcode_str);
+	// 
+	bool check_order_info(std::string spasscode);
 
 	/**
 	 *	get 系列函数
@@ -354,6 +365,7 @@ private:
 	// 12306 dynamic key&value
 	std::string dynamic_key;
 	std::string dynamic_value;
+	std::string repeat_submit_token;
 	
 	// 12306用户信息
 	std::string user_name;

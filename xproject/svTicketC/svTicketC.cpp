@@ -16,7 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::string spasscode;
 		std::cin >> spasscode;
 		
-		if (_manage.passcode_verify(spasscode))
+		if (_manage.login_passcode_verify(spasscode))
 		{
 			if (_manage.login_verify("785192612@qq.com","1201qiao", spasscode))
 			{
@@ -40,7 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//
 	//_manage.query_passengers();
 	
-	_manage.left_ticket_init();
+	_manage.confirm_passenger_initdc();
 
 //	_manage.login_out();
 _error:

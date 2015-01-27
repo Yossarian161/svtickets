@@ -416,7 +416,9 @@ Cache-Control: no-cache
 Cookie: JSESSIONID=3C2124E32D798AAD4DFFDB39728EBEC8; BIGipServerotn=769065226.24610.0000; _jc_save_czxxcx_toStation=%u5E7F%u5DDE%u5317%2CGBQ; _jc_save_czxxcx_fromDate=2015-01-14; _jc_save_detail=true; _jc_save_showZtkyts=true; _jc_save_fromStation=%u6CF0%u548C%2CTHG; _jc_save_toStation=%u5409%u5B89%2CVAG; _jc_save_fromDate=2015-02-02; _jc_save_toDate=2015-01-21; _jc_save_wfdc_flag=dc; current_captcha_type=C
 
 cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=1%2C0%2C1%2C%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C13410681210%2CN&oldPassengerStr=%E6%B6%82%E8%87%AA%E5%BC%BA%2C1%2C360121198811094211%2C1_&tour_flag=dc&randCode=kdpm&ODEwMzUz=NGYxOTVkOWQxNjI0Mjg5YQ%3D%3D&_json_att=&REPEAT_SUBMIT_TOKEN=03772c202272b766b7f79e2ebe3c8fea
-
+ 
+oldPassengerStr=陈晓霞,1,362421198812125321,1_胡流传,1,362426199309052539,1_
+passengerTicketStr=1,0,1,陈晓霞,1,362421198812125321,,N_1,0,1,胡流传,1,362426199309052539,,N
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 HTTP/1.1 200 OK
 Date: Wed, 21 Jan 2015 14:15:58 GMT
