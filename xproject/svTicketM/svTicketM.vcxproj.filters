@@ -13,23 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="external">
-      <UniqueIdentifier>{e560be39-f302-4f73-98bc-b785f7de53b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="win32-utils">
       <UniqueIdentifier>{9462caa8-02df-4557-bf62-0ed38dda2038}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ctrl-ext">
-      <UniqueIdentifier>{71363b70-04f5-44ac-9a25-fcd4f1a5f7b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="grid_ext">
-      <UniqueIdentifier>{c4696031-499b-4b00-9224-223b0af60680}</UniqueIdentifier>
     </Filter>
     <Filter Include="svhttp">
       <UniqueIdentifier>{8017c2e7-e5fd-4d77-a40a-07aec9c6dac2}</UniqueIdentifier>
     </Filter>
     <Filter Include="svtickets">
       <UniqueIdentifier>{c55162e4-af19-450d-9cb3-325f0eb49479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctrl-ext">
+      <UniqueIdentifier>{71363b70-04f5-44ac-9a25-fcd4f1a5f7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctrl-ext\grid_ext">
+      <UniqueIdentifier>{c4696031-499b-4b00-9224-223b0af60680}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,28 +58,28 @@
       <Filter>win32-utils</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\CellRange.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\GridCell.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\GridCellBase.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\GridCtrl.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\GridDropTarget.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\InPlaceEdit.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\TitleTip.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="GridCtrl_src\MemDC.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="autoComplete\StationEdit.h">
       <Filter>ctrl-ext</Filter>
@@ -106,9 +103,12 @@
       <Filter>svhttp</Filter>
     </ClInclude>
     <ClInclude Include="NewCellTypes\GridURLCell.h">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
     <ClInclude Include="StopStationDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -129,22 +129,22 @@
       <Filter>win32-utils</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\GridCell.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\GridCellBase.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\GridCtrl.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\GridDropTarget.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\InPlaceEdit.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="GridCtrl_src\TitleTip.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="autoComplete\StationEdit.cpp">
       <Filter>ctrl-ext</Filter>
@@ -165,9 +165,12 @@
       <Filter>svhttp</Filter>
     </ClCompile>
     <ClCompile Include="NewCellTypes\GridURLCell.cpp">
-      <Filter>grid_ext</Filter>
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
     <ClCompile Include="StopStationDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,6 +10,8 @@
 #include "GridCtrl_src/GridCtrl.h"
 #include "autoComplete/StationEdit.h"
 
+extern ticket_manage gl_manage;
+
 // CsvTicketMDlg ¶Ô»°¿ò
 class CsvTicketMDlg : public CDialogEx
 {
@@ -42,11 +44,14 @@ public:
 	CStationEdit m_from_station;
 	CStationEdit m_to_station;
 
-	ticket_manage gl_manage;
+	
 	CDateTimeCtrl m_train_date;
 	afx_msg void OnBnClickedBtnChangeStation();
 
 	void OnClickedStopStation(int wp, int lp);
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
+	bool OnInitLogin();
 };

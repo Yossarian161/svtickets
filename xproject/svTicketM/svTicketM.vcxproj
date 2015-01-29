@@ -62,7 +62,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>../../external/jsoncpp/build/vc11;../../external/libcurl/build;../../external/libiconv/build/vc11</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../external/jsoncpp/build/vc11;../../external/libcurl/build;../../external/libiconv/build/vc11;../../external</AdditionalLibraryDirectories>
       <AdditionalDependencies>libiconvd.lib;jsoncppd.lib;libcurl_imp.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -126,6 +126,7 @@
     <ClInclude Include="GridCtrl_src\InPlaceEdit.h" />
     <ClInclude Include="GridCtrl_src\MemDC.h" />
     <ClInclude Include="GridCtrl_src\TitleTip.h" />
+    <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="NewCellTypes\GridURLCell.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="GridCtrl_src\GridDropTarget.cpp" />
     <ClCompile Include="GridCtrl_src\InPlaceEdit.cpp" />
     <ClCompile Include="GridCtrl_src\TitleTip.cpp" />
+    <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="NewCellTypes\GridURLCell.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -5,21 +5,17 @@
 #include "stdafx.h"
 #include "svTicketM.h"
 #include "svTicketMDlg.h"
-#include "afxdialogex.h"
-
 #include "NewCellTypes/GridURLCell.h"
-
 #include "StopStationDlg.h"
+#include "LoginDlg.h"
+
+ticket_manage gl_manage;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-#if _UNICODE
-#define win32_A2U(T)	win32_utils::AnsiToUnicode(T)
-#else
-#define win32_A2U(T)	T
-#endif
+
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -78,6 +74,7 @@ BEGIN_MESSAGE_MAP(CsvTicketMDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_QUERY, &CsvTicketMDlg::OnBnClickedBtnQuery)
 	ON_BN_CLICKED(IDC_BTN_CHANGE_STATION, &CsvTicketMDlg::OnBnClickedBtnChangeStation)
 	ON_MESSAGE(WM_GRID_CELL_CLICK, &CsvTicketMDlg::OnGridCellClick)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -117,7 +114,11 @@ BOOL CsvTicketMDlg::OnInitDialog()
 
 	m_train_date.SetFormat(_T("yyyy-MM-dd"));
 	//
-	gl_manage.login_init();
+
+	if (gl_manage.login_init() != 1)
+	{
+		SetTimer(1, 1000, NULL);
+	}
 	gl_manage.get_station_name();
 
 	m_from_station.Init();
@@ -131,6 +132,8 @@ BOOL CsvTicketMDlg::OnInitDialog()
 
 	m_to_station.AddSearchStrings(gl_manage.get_station_name_list());
 	m_to_station.SetSelectOnly(true);
+
+
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -311,16 +314,16 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 	
 	if (!m_surplus_query)
 	{
-		_manage.query_train_data(ticket_dto);
+		gl_manage.query_train_data(ticket_dto);
 	}
 	else
 	{
-		_manage.query_train_data_surplus(ticket_dto);
+		gl_manage.query_train_data_surplus(ticket_dto);
 	}
 	
 	std::vector<train_data> data_list = m_surplus_query?
-		_manage.get_train_data_surplus_list()
-		:_manage.get_train_data_list();
+		gl_manage.get_train_data_surplus_list()
+		:gl_manage.get_train_data_list();
 
 	for (unsigned int idx = 0; idx < data_list.size(); ++idx)
 	{
@@ -490,9 +493,9 @@ LRESULT CsvTicketMDlg::OnGridCellClick(WPARAM wParam, LPARAM lParam)
 
 void CsvTicketMDlg::OnClickedStopStation(int wp, int lp)
 {
-	_manage.query_stop_station(wp-1);
+	gl_manage.query_stop_station(wp-1);
 	CStopStationDlg stop_stat_dlg;
-	stop_stat_dlg.stop_stat = _manage.get_stop_station();
+	stop_stat_dlg.stop_stat = gl_manage.get_stop_station();
 
 	stop_stat_dlg.DoModal();
 
@@ -508,4 +511,27 @@ BOOL CsvTicketMDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CsvTicketMDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	if (nIDEvent == 1)
+	{
+		KillTimer(1);
+		OnInitLogin();
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+bool CsvTicketMDlg::OnInitLogin()
+{
+	CLoginDlg dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		return true;
+	}
+	
+	return false;
 }

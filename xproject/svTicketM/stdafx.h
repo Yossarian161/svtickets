@@ -23,6 +23,13 @@
 #include <afxdisp.h>        // MFC 自动化类
 
 
+#if _UNICODE
+#define win32_A2U(T)	win32_utils::AnsiToUnicode(T)
+#define win32_U2A(T)	win32_utils::UnicodeToAnsi(T)
+#else
+#define win32_A2U(T)	T
+#define win32_U2A(T)	T
+#endif
 
 // #ifndef _AFX_NO_OLE_SUPPORT
 // #include <afxdtctl.h>           // MFC 对 Internet Explorer 4 公共控件的支持
