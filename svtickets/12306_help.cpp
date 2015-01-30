@@ -13,7 +13,7 @@ int ticket_manage::login_init()
 	static const bool status = false;
 	if (!status)
 	{
-		//_client.set_verbose();
+		_client.set_verbose();
 		_client.set_option(CURLOPT_FOLLOWLOCATION, true);
 		_client.set_cookies("data/cookie.txt");
 		_client.enable_accept_encoding(true);
@@ -90,13 +90,9 @@ bool ticket_manage::login_passcode_reflush(std::string img_path)
 {
 	request_header opts;
 	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/login/init#"));
-	opts.insert(std::string("Accept-Language: zh-cn"));
 	opts.insert(std::string("User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET4.0C; .NET4.0E)"));
-//	opts.insert(std::string("Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5"));
+	opts.insert(std::string("Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5"));
 	opts.insert(std::string("Connection: Keep-Alive"));
-	opts.insert(std::string("x-requested-with: XMLHttpRequest"));
-	opts.insert(std::string("Cache-Control: no-cache"));
-	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
 	_client.set_headers(opts);
 	
 	// 生成随机数
@@ -378,22 +374,21 @@ bool ticket_manage::get_station_name()
 
 bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 {
-	//_client.set_verbose(true);
+#if 0	// 查询前先查询log，此处为了节省时间，暂先屏蔽。
+	std::string _url = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date=2015-02-17&leftTicketDTO.from_station=SZQ&leftTicketDTO.to_station=BJP&purpose_codes=ADULT";
+	if (!_client.open(_url))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
 
-// 	std::string _url = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date=2015-02-17&leftTicketDTO.from_station=SZQ&leftTicketDTO.to_station=BJP&purpose_codes=ADULT";
-// 	if (!_client.open(_url))
-// 	{
-// 		_error_buf = _client.get_error_buffer();
-// 		return false;
-// 	}
-// 
-// 	std::string _reponse_str = _client.read_some();
-// 	//convert_str("utf-8", "gbk", _reponse_str);
-// 	SVLOGGER_INFO << _reponse_str;
+	std::string _reponse_str = _client.read_some();
+	//convert_str("utf-8", "gbk", _reponse_str);
+	SVLOGGER_INFO << _reponse_str;
+#endif
 
 	std::string url = "https://kyfw.12306.cn/otn/leftTicket/queryT?"
 		+ ticket_dto.get_query_string();
-		//"leftTicketDTO.train_date=2015-02-17&leftTicketDTO.from_station=SZQ&leftTicketDTO.to_station=BJP&purpose_codes=ADULT";
 
 	request_header opts;
 	opts.insert(std::string("Referer:https://kyfw.12306.cn/otn/leftTicket/init"));

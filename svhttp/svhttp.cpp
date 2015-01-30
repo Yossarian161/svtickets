@@ -95,8 +95,7 @@ namespace svhttp
 		_curl = curl_easy_init();
 		if (nullptr == _curl)
 		{
-			std::cerr << "get a easy handle failed." << std::endl;
-			curl_global_cleanup();
+			SVLOGGER_ERR << "get a easy handle failed." ;
 		}
 
 		memset(_error_buffer, 0, sizeof(_error_buffer));
@@ -105,10 +104,16 @@ namespace svhttp
 	http_client::~http_client()
 	{
 		if (_curl)
-            curl_easy_cleanup(_curl);
-        /* free the linked list for header data */
-         if (_headers)
-             curl_slist_free_all(_headers);
+		{
+			curl_easy_cleanup(_curl);
+			_curl = nullptr;
+		}
+		/* free the linked list for header data */
+		 if (_headers)
+		 {
+			curl_slist_free_all(_headers);
+			_headers = nullptr;
+		 }
 	}
 
 	bool http_client::open(const std::string& url)
@@ -149,10 +154,13 @@ namespace svhttp
 		set_option(CURLOPT_NOSIGNAL, 1L);
 
 		// set ssl ca
-		if (_ssl_ca_file.empty()) {
+		if (_ssl_ca_file.empty()) 
+		{
 			set_option(CURLOPT_SSL_VERIFYPEER, 0L);
 			set_option(CURLOPT_SSL_VERIFYHOST, 0L);
-		} else {
+		} 
+		else 
+		{
 			set_option(CURLOPT_SSL_VERIFYPEER, 1L);
 			set_option(CURLOPT_SSL_VERIFYHOST, 2L);
 			set_option(CURLOPT_CAINFO, _ssl_ca_file.c_str());
@@ -161,18 +169,18 @@ namespace svhttp
 		// set cookies.
 		if (!_cookie_file.empty()) {
 			//
-			if (!set_option(CURLOPT_COOKIEFILE, _cookie_file.c_str())) {
+			if (!set_option(CURLOPT_COOKIEFILE, _cookie_file.c_str())) 
+			{
 				return false;
 			}
 			//
-			if (!set_option(CURLOPT_COOKIEJAR, _cookie_file.c_str())) {
+			if (!set_option(CURLOPT_COOKIEJAR, _cookie_file.c_str())) 
+			{
 				return false;
 			}
 		}
 
-		// 清空历史数据
-		_reponse_stream.clear();
-		_reponse_header_stream.clear();
+		
 
 		// 设置支持gzip
 		if (_accept_encoding)
@@ -180,24 +188,44 @@ namespace svhttp
 			set_option(CURLOPT_ACCEPT_ENCODING, "");
 		}
 
+		// 清空历史数据
+		_reponse_stream.clear();
+		_reponse_header_stream.clear();
+
 		return set_option(CURLOPT_WRITEFUNCTION, write_data)
 			&& set_option(CURLOPT_WRITEDATA, &_reponse_stream)
 			&& set_option(CURLOPT_HEADERFUNCTION, write_header_data)
 			&& set_option(CURLOPT_HEADERDATA, &_reponse_header_stream);
 	}
 
+	// 重新设置消息头信息
 	bool http_client::set_headers(request_header &request_opt)
 	{
-		/* get custom header data (if set) */
+		// 对已经存在的消息头全部清除。
+		if (_headers)
+        {
+			curl_slist_free_all(_headers);
+			_headers = nullptr;		// ****必须
+		}
+		/**	
+		 *	curl_slist_append第一个参数传nullptr,用于生成一个新的 _headers
+		 *  _headers = curl_slist_append(nullptr, it->c_str());
+		 */
+
+		// get custom header data (if set)
 		std::vector<std::string> headers=request_opt.option_all();
 		if(!headers.empty())
 		{
-			/* append custom headers one by one */
+			// append custom headers one by one 
 			for (std::vector<std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
+			{	
 				_headers = curl_slist_append(_headers,it->c_str());
-			/* set custom headers for curl */
+			}
+			// set custom headers for curl 
 			if (!set_option(CURLOPT_HTTPHEADER, _headers))
-				return false;
+			{
+				return false;	
+			}
 		}
 		return true;
 	}

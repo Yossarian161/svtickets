@@ -5,9 +5,32 @@
 
 #include "12306_help.h"
 #include <iostream>
+#include "xdecaptcha.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+#if 1
+	SVLOGGER_INIT_PATH("./data/log.txt");
+	ticket_manage _manage;
+
+	//_manage.login_init();
+
+	std::ostringstream oss_path;
+	for (int idx = 0; idx < 20; ++idx)
+	{
+		for (int i = 0; i < 10; ++i,++idx)
+		{
+			oss_path.str("");
+			oss_path << "images/pass_0" << idx+1 << ".png";
+			
+			_manage.passenger_passcode_reflush(oss_path.str());
+			SVLOGGER_DBG << oss_path.str() << "\tend.";
+
+			SVLOGGER_DBG << xdecaptcha::get_instance()->get_vcode_from_file(oss_path.str());
+			//Sleep(rand()%2000);
+		}
+	}
+#else
 	ticket_manage _manage;
 	
 	if (_manage.login_init() != 1)
@@ -41,7 +64,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//_manage.query_passengers();
 	
 	_manage.confirm_passenger_initdc();
-
+#endif
 //	_manage.login_out();
 _error:
 	getchar();

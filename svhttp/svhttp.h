@@ -47,8 +47,8 @@ namespace svhttp
 	class http_proxy
 	{
 	public:
-		void set_proxy_type(curl_proxytype &type){ _type = type; };
-		curl_proxytype get_proxy_type(){ return _type; }
+		void set_proxy_type(curl_proxytype &type){ proxy_type = type; };
+		curl_proxytype get_proxy_type(){ return proxy_type; }
 
 		void set_hostname(const std::string& hostname){ _hostname = hostname; }
 		void set_port(const std::string& port) { _port = port; }
@@ -61,7 +61,7 @@ namespace svhttp
 		std::string get_password() { return _password; }
 
 	private:
-		curl_proxytype _type;
+		curl_proxytype proxy_type;
 
 		std::string _hostname;
 		std::string _port;
