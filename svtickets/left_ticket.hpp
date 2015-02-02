@@ -35,7 +35,7 @@ public:
 
 		return osstr.str();
 	}
-
+	// ”‡∆±≤È—Ø
 	inline std::string get_query_surplus_string()
 	{
 		std::ostringstream osstr;
@@ -47,6 +47,7 @@ public:
 		return osstr.str();
 	}
 
+	left_ticket_dto():purpose_codes("ADULT"){};
 private:
 	std::string form_station;
 	std::string to_station;

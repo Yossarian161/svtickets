@@ -403,7 +403,7 @@ std::string passenger_dto::get_old_passenger_str()
 		osstr_ticket << passenger.get_passenger_name() << ","  
 			<< passenger.get_passenger_id_type() << ","
 			<< passenger.get_passenger_id_no() << ","
-			<< passenger.get_passenger_type();
+			<< passenger.get_passenger_type() << "_";
 	}
 
 	return osstr_ticket.str();

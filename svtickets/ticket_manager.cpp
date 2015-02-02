@@ -175,6 +175,14 @@ bool ticket_manage::login_verify(const std::string& username, const std::string&
 		return false;
 	}
 
+	request_header opts;
+	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/login/init"));
+	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
+	opts.insert(std::string("Accept-Encoding: gzip, deflate"));
+	opts.insert(std::string("User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727)"));
+	opts.insert(std::string("Connection: Keep-Alive"));
+	_client.set_headers(opts);
+
 	std::ostringstream post_strem;
 	post_strem << "loginUserDTO.user_name=" << _client.str_escape(username)
 		<< "&userDTO.password=" << passwd
@@ -376,7 +384,15 @@ bool ticket_manage::get_station_name()
 bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 {
 #if 0	// 查询前先查询log，此处为了节省时间，暂先屏蔽。
-	std::string _url = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date=2015-02-17&leftTicketDTO.from_station=SZQ&leftTicketDTO.to_station=BJP&purpose_codes=ADULT";
+	request_header opts1;
+	opts1.insert(std::string("Referer:https://kyfw.12306.cn/otn/leftTicket/init"));
+	opts1.insert(std::string("Accept-Encoding:gzip,deflate,sdch"));
+	opts1.insert(std::string("Connection: Keep-Alive"));
+	_client.set_headers(opts1);
+
+	std::string _url = "https://kyfw.12306.cn/otn/leftTicket/log?"
+		+ ticket_dto.get_query_string();
+
 	if (!_client.open(_url))
 	{
 		_error_buf = _client.get_error_buffer();
@@ -394,6 +410,8 @@ bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 	request_header opts;
 	opts.insert(std::string("Referer:https://kyfw.12306.cn/otn/leftTicket/init"));
 	opts.insert(std::string("Accept-Encoding:gzip,deflate,sdch"));
+	opts.insert(std::string("Connection: Keep-Alive"));
+	opts.insert(std::string("If-Modified-Since: 0"));
 	_client.set_headers(opts);
 
 	if (!_client.open(url))
@@ -404,7 +422,7 @@ bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 
 	std::string reponse_str = _client.read_some();
 	convert_str("utf-8", "gbk", reponse_str);
-	//SVLOGGER_DBG << reponse_str;
+	SVLOGGER_FILE << reponse_str;
 
 	Json::Reader reader;
 	Json::Value reader_object;
@@ -703,7 +721,7 @@ bool ticket_manage::query_passengers()
 	int x_pos = rep_str.find("totlePage");
 	int d_pos = rep_str.find(";", x_pos);
 	rep_str = rep_str.substr(x_pos+12, d_pos-x_pos-12);
-	SVLOGGER_DBG << rep_str;
+	SVLOGGER_DBG << "总页码:" << rep_str << "页";
 
 	/**
 	 *	根据获取到的总页数，一次性查询所有联系人信息
@@ -732,7 +750,7 @@ bool ticket_manage::query_passengers()
 
 	std::string reponse_str = _client.read_some();
 	convert_str("utf-8", "gbk", reponse_str);
-	SVLOGGER_DBG << reponse_str;
+	//SVLOGGER_DBG << reponse_str;
 
 	Json::Reader reader;
 	Json::Value reader_object;

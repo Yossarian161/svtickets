@@ -40,7 +40,7 @@ public:
 	{
 		std::ostringstream osstr;
 		osstr << code << "\t" << passenger_name << "\t"
-			<< passenger_id_type_name << "\t"
+			//<< passenger_id_type_name << "\t"
 			<< passenger_id_no << "\t" << mobile_no << "\t"
 			;
 		return osstr.str();
@@ -69,9 +69,11 @@ public:
 	std::string get_passenger_id_type();
 	std::string get_passenger_id_type_name();
 	std::string get_passenger_id_no();
+
 	std::string get_seat_type();
 	std::string get_seat_type_code();
 	std::string get_seat_type_name();
+
 	std::string get_passenger_type();
 	std::string get_mobile_no();
 	std::string get_ticket_type();

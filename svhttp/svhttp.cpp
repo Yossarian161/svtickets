@@ -126,6 +126,11 @@ namespace svhttp
 		}
 
 		CURLcode code = curl_easy_perform(_curl);
+
+		// 每次执行完当次请求，重置请求类型为get<默认>
+		// fixed bugs: post请求后，继续用该curl发的所有请求都变成post的。
+		set_post_fields("");
+
 		if (CURLE_OK != code)
 		{
 			return false;
@@ -269,6 +274,12 @@ namespace svhttp
 
 	bool http_client::set_post_fields( const std::string& post_str )
 	{
+		// when post_str is empty, reset the request type to get. close post.
+		if (post_str.empty())
+		{
+			return set_option(CURLOPT_POST, 0);
+		}
+
 		return set_option(CURLOPT_POST, 1)
 			&& set_option(CURLOPT_POSTFIELDS, post_str.c_str())
 			&& set_option(CURLOPT_POSTFIELDSIZE, post_str.length());
