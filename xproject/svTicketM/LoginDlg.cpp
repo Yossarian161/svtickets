@@ -6,7 +6,9 @@
 #include "LoginDlg.h"
 #include "afxdialogex.h"
 #include "svTicketMDlg.h"
+
 #include "ximage.hpp"
+#include "xdecaptcha.h"
 
 // CLoginDlg 对话框
 
@@ -51,6 +53,8 @@ BOOL CLoginDlg::OnInitDialog()
 // 	}
 
 	SetTimer(1, 100, NULL);
+	std::string pass_str = decaptchaImage("./data/pass.png");
+	SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -102,7 +106,7 @@ void CLoginDlg::onFlushPassCode()
 void CLoginDlg::OnStnClickedStaticPasscode()
 {
 	gl_manage.login_passcode_reflush();
-	Sleep(500);
+	//Sleep(500);
 	std::string pass_str = decaptchaImage("./data/pass.png");
 	SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
 

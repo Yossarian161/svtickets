@@ -1,6 +1,6 @@
 #pragma once
 
-#include "12306_help.h"
+#include "svticket.h"
 #include "GridCtrl_src/GridCtrl.h"
 // CStopStationDlg ¶Ô»°¿ò
 

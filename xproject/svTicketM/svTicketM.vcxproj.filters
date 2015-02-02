@@ -87,9 +87,6 @@
     <ClInclude Include="autoComplete\StationListWnd.h">
       <Filter>ctrl-ext</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\svtickets\12306_help.h">
-      <Filter>svtickets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp">
       <Filter>svtickets</Filter>
     </ClInclude>
@@ -110,6 +107,27 @@
     </ClInclude>
     <ClInclude Include="LoginDlg.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\win32-utils\xdecaptcha.h">
+      <Filter>win32-utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PassengerDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\left_ticket.hpp">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\station.hpp">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\svticket.h">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\ticket_manager.h">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\passenger.h">
+      <Filter>svtickets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,9 +170,6 @@
     <ClCompile Include="autoComplete\StationListWnd.cpp">
       <Filter>ctrl-ext</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\svtickets\12306_help.cpp">
-      <Filter>svtickets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\svhttp\bencode.cpp">
       <Filter>svhttp</Filter>
     </ClCompile>
@@ -172,6 +187,18 @@
     </ClCompile>
     <ClCompile Include="LoginDlg.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\win32-utils\xdecaptcha.cpp">
+      <Filter>win32-utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PassengerDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\ticket_manager.cpp">
+      <Filter>svtickets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\passenger.cpp">
+      <Filter>svtickets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

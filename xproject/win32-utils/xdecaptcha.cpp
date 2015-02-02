@@ -16,10 +16,18 @@ xdecaptcha* xdecaptcha::get_instance()
 
 xdecaptcha::xdecaptcha()
 	:m_cds_index(0)
+	,m_bresult(false)
 {
-	load_andivcode_dll();
-
-	m_cds_index = load_cds_from_file(std::string("decaptcha.cds"));
+	m_bresult = load_andivcode_dll();
+	
+	if (m_bresult)
+	{
+		m_cds_index = load_cds_from_file(std::string("decaptcha.cds"));
+		if (m_cds_index == -1)
+		{
+			m_bresult = false;
+		}
+	}
 }
 
 xdecaptcha::~xdecaptcha()
@@ -30,13 +38,15 @@ xdecaptcha::~xdecaptcha()
 	}
 }
 // 加载dll文件
-void xdecaptcha::load_andivcode_dll(std::string& dll_path)
+bool xdecaptcha::load_andivcode_dll(std::string& dll_path)
 {
 	m_hInst = LoadLibraryA(dll_path.c_str()); // 加载 dll
 	if (!m_hInst)
 	{
 		_error_buf = "load library <decaptcha.dll> failed.";
+		return false;
 	}
+	return true;
 }
 
 // 载入识别库
@@ -88,6 +98,10 @@ int xdecaptcha::load_cds_from_file(std::string& file_path)
  */
 std::string xdecaptcha::get_vcode_from_file( std::string& file_path, int cds_idx, int code_len )
 {
+	if (!m_bresult)
+	{
+		return "";
+	}
 	std::string _result_str;
 	typedef bool (CALLBACK* lpGetVCode)(int,const char[], char[]);
 	lpGetVCode getvcode_from_file = (lpGetVCode)GetProcAddress(m_hInst, "GetVcodeFromFile");
@@ -120,6 +134,10 @@ std::string xdecaptcha::get_vcode_from_file( std::string& file_path, int cds_idx
  */
 std::string xdecaptcha::get_vcode_from_buffer( std::string& str_buffer, int cds_idx /*= 0*/, int code_len /*= 4*/ )
 {
+	if (!m_bresult)
+	{
+		return "";
+	}
 	std::string _result_str;
 	typedef bool (CALLBACK* lpGetVCode)(int,const char[], int, char[]);
 	lpGetVCode getvcode_from_buffer = (lpGetVCode)GetProcAddress(m_hInst, "GetVcodeFromBuffer");
@@ -151,6 +169,10 @@ std::string xdecaptcha::get_vcode_from_buffer( std::string& str_buffer, int cds_
  */
 std::string xdecaptcha::get_vcode_from_url( std::string& url_path, int cds_idx /*= 0*/, int code_len /*= 4*/ )
 {
+	if (!m_bresult)
+	{
+		return "";
+	}
 	std::string result_str;
 	typedef bool (CALLBACK* lpGetVCode)(int, const char[], char[]);
 	lpGetVCode getvcode_from_url = (lpGetVCode)GetProcAddress(m_hInst, "GetVcodeFromURL");

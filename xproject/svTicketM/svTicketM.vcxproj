@@ -111,9 +111,14 @@
     <ClInclude Include="..\..\svhttp\bencode.h" />
     <ClInclude Include="..\..\svhttp\svhttp.h" />
     <ClInclude Include="..\..\svhttp\svlogger.h" />
-    <ClInclude Include="..\..\svtickets\12306_help.h" />
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp" />
+    <ClInclude Include="..\..\svtickets\left_ticket.hpp" />
+    <ClInclude Include="..\..\svtickets\passenger.h" />
+    <ClInclude Include="..\..\svtickets\station.hpp" />
+    <ClInclude Include="..\..\svtickets\svticket.h" />
+    <ClInclude Include="..\..\svtickets\ticket_manager.h" />
     <ClInclude Include="..\win32-utils\bencode.hpp" />
+    <ClInclude Include="..\win32-utils\xdecaptcha.h" />
     <ClInclude Include="..\win32-utils\ximage.hpp" />
     <ClInclude Include="autoComplete\StationEdit.h" />
     <ClInclude Include="autoComplete\StationListWnd.h" />
@@ -128,6 +133,7 @@
     <ClInclude Include="GridCtrl_src\TitleTip.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="NewCellTypes\GridURLCell.h" />
+    <ClInclude Include="PassengerDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StopStationDlg.h" />
@@ -145,7 +151,13 @@
     <ClCompile Include="..\..\svhttp\svlogger.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\svtickets\12306_help.cpp">
+    <ClCompile Include="..\..\svtickets\passenger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\ticket_manager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\win32-utils\xdecaptcha.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\win32-utils\ximage.cpp">
@@ -162,6 +174,7 @@
     <ClCompile Include="GridCtrl_src\TitleTip.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="NewCellTypes\GridURLCell.cpp" />
+    <ClCompile Include="PassengerDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -6,9 +6,10 @@
 #include "afxwin.h"
 #include "afxdtctl.h"
 
-#include "12306_help.h"
+#include "svticket.h"
 #include "GridCtrl_src/GridCtrl.h"
 #include "autoComplete/StationEdit.h"
+#include "afxcmn.h"
 
 extern ticket_manage gl_manage;
 
@@ -54,4 +55,6 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	bool OnInitLogin();
+	CListCtrl m_passenger_list;
+	afx_msg void OnStnClickedBtnSelect();
 };

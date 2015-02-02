@@ -1,11 +1,12 @@
-#include "12306_help.h"
-
 #include <iostream>
 #include <sstream>
 #include "jsoncpp/include/json.h"
 #include "bencode.h"
+
+#include "ticket_manager.h"
 #include "dynamic_encrypt.hpp"
 
+using namespace svhttp;
 
 // 登录初始化<获取dynamicJs请求地址,获取动态key>
 int ticket_manage::login_init()
@@ -525,6 +526,13 @@ bool ticket_manage::query_train_data_surplus( left_ticket_dto& ticket_dto )
 		return false;
 	}
 
+	if (!reader_object.isMember("status"))
+	{
+		_error_buf = "返回数据错误";
+		SVLOGGER_DBG << reponse_str;
+		return false; 
+	}
+
 	if (!reader_object["status"].asBool() == true)
 	{
 		Json::Value msg = reader_object["messages"];
@@ -744,7 +752,7 @@ bool ticket_manage::query_passengers()
 	}
 	else
 	{
-		passenger_dto_vec.clear();
+		m_passenger_dto.contacts_datum_clear();
 
 		Json::Value pax_data_obj = reader_object["data"]["datas"];
 		if (pax_data_obj.size() == 0)
@@ -756,34 +764,34 @@ bool ticket_manage::query_passengers()
 
 		for (unsigned int idx = 0; idx < pax_data_obj.size(); ++idx)
 		{
-			passenger_dto pax_dto;
+			contacts_datum contacts;
 			Json::Value pax_dto_obj = pax_data_obj[idx];
 			
-			pax_dto.code = pax_dto_obj["code"].asString();
-			pax_dto.passenger_name = pax_dto_obj["passenger_name"].asString();
-			pax_dto.sex_code = pax_dto_obj["sex_code"].asString();
-			pax_dto.sex_name = pax_dto_obj["sex_name"].asString();
-			pax_dto.born_date = pax_dto_obj["born_date"].asString();
-			pax_dto.country_code = pax_dto_obj["country_code"].asString();
-			pax_dto.passenger_id_type_code = pax_dto_obj["passenger_id_type_code"].asString();
-			pax_dto.passenger_id_type_name = pax_dto_obj["passenger_id_type_name"].asString();
-			pax_dto.passenger_id_no = pax_dto_obj["passenger_id_no"].asString();
-			pax_dto.passenger_type = pax_dto_obj["passenger_type"].asString();
-			pax_dto.passenger_flag = pax_dto_obj["passenger_flag"].asString();
-			pax_dto.passenger_type_name = pax_dto_obj["passenger_type_name"].asString();
-			pax_dto.mobile_no = pax_dto_obj["mobile_no"].asString();
-			pax_dto.phone_no = pax_dto_obj["phone_no"].asString();
-			pax_dto.email = pax_dto_obj["email"].asString();
-			pax_dto.address = pax_dto_obj["address"].asString();
-			pax_dto.postalcode = pax_dto_obj["postalcode"].asString();
-			pax_dto.first_letter = pax_dto_obj["first_letter"].asString();
-			pax_dto.recordCount = pax_dto_obj["recordCount"].asString();
-			pax_dto.isUserSelf = pax_dto_obj["isUserSelf"].asString();
-			pax_dto.total_times = pax_dto_obj["total_times"].asString();
+			contacts.code = pax_dto_obj["code"].asString();
+			contacts.passenger_name = pax_dto_obj["passenger_name"].asString();
+			contacts.sex_code = pax_dto_obj["sex_code"].asString();
+			contacts.sex_name = pax_dto_obj["sex_name"].asString();
+			contacts.born_date = pax_dto_obj["born_date"].asString();
+			contacts.country_code = pax_dto_obj["country_code"].asString();
+			contacts.passenger_id_type_code = pax_dto_obj["passenger_id_type_code"].asString();
+			contacts.passenger_id_type_name = pax_dto_obj["passenger_id_type_name"].asString();
+			contacts.passenger_id_no = pax_dto_obj["passenger_id_no"].asString();
+			contacts.passenger_type = pax_dto_obj["passenger_type"].asString();
+			contacts.passenger_flag = pax_dto_obj["passenger_flag"].asString();
+			contacts.passenger_type_name = pax_dto_obj["passenger_type_name"].asString();
+			contacts.mobile_no = pax_dto_obj["mobile_no"].asString();
+			contacts.phone_no = pax_dto_obj["phone_no"].asString();
+			contacts.email = pax_dto_obj["email"].asString();
+			contacts.address = pax_dto_obj["address"].asString();
+			contacts.postalcode = pax_dto_obj["postalcode"].asString();
+			contacts.first_letter = pax_dto_obj["first_letter"].asString();
+			contacts.recordCount = pax_dto_obj["recordCount"].asString();
+			contacts.isUserSelf = pax_dto_obj["isUserSelf"].asString();
+			contacts.total_times = pax_dto_obj["total_times"].asString();
 
-			SVLOGGER_DBG << pax_dto.print_test();
+			SVLOGGER_DBG << contacts.print_test();
 
-			passenger_dto_vec.push_back(pax_dto);
+			m_passenger_dto.contacts_datum_push(contacts);
 		}
 	}
 	return true;
@@ -1091,16 +1099,21 @@ bool ticket_manage::check_order_info(std::string spasscode)
 	opts.insert(std::string("Content-Type: application/x-www-form-urlencoded; charset=UTF-8"));
 	_client.set_headers(opts);
 	
+	std::string ticket_str = m_passenger_dto.get_passenger_ticket_str();
+	convert_str("gbk", "utf-8", ticket_str);
+	std::string old_pstr = m_passenger_dto.get_old_passenger_str();
+	convert_str("gbk", "utf-8", old_pstr);
+
 	std::ostringstream osstr;
 	osstr << "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr="
-		<< "1%2C0%2C1%2C%E9%99%88%E6%99%93%E9%9C%9E%2C1%2C362421198812125321%2C%2CN_1%2C0%2C1%2C%E8%83%A1%E6%B5%81%E4%BC%A0%2C1%2C362426199309052539%2C%2CN"
-		<< "&oldPassengerStr=" << "%E9%99%88%E6%99%93%E9%9C%9E%2C1%2C362421198812125321%2C1_%E8%83%A1%E6%B5%81%E4%BC%A0%2C1%2C362426199309052539%2C1_"
+		<< _client.str_escape(ticket_str)
+		<< "&oldPassengerStr=" << _client.str_escape(old_pstr)
 		<< "&tour_flag=dc&randCode=" << spasscode
 		<< "&" << _client.str_escape(dynamic_key) << "=" << _client.str_escape(dynamic_value)
 		<< "&_json_att=&REPEAT_SUBMIT_TOKEN=" << repeat_submit_token;
 
 	std::string post_str = osstr.str();
-	convert_str("gbk", "utf-8", post_str);
+	/*convert_str("gbk", "utf-8", post_str);*/
 	_client.set_post_fields(post_str);
 	
 	if (!_client.open(url))

@@ -6,7 +6,7 @@
 
 /** 
  *	xdecaptcha 
- *  验证码自动识别库
+ *  验证码自动识别库(antiVcode_2.1)
  */
 class xdecaptcha
 {
@@ -28,18 +28,20 @@ public:
 	std::string get_vcode_from_buffer(std::string& str_buffer, int cds_idx = 0, int code_len = 4);
 	std::string get_vcode_from_url(std::string& url_path, int cds_idx = 0, int code_len = 4);
 
+	std::string get_error_buffer() { return _error_buf; };
 private:
 	xdecaptcha();
 	~xdecaptcha();
 
 	// 动态加载识别库dll 
-	void load_andivcode_dll(std::string& dll_path = std::string("decaptcha.dll"));
+	bool load_andivcode_dll(std::string& dll_path = std::string("decaptcha.dll"));
 
 	// --------------------------------
 	static xdecaptcha* x_decaptcha;
 	HINSTANCE m_hInst;
 	std::string _error_buf;
 	int m_cds_index;
+	bool m_bresult;
 };
 
 #endif

@@ -1,5 +1,5 @@
-
-// svTicketMDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿
+// svTicketMDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -8,6 +8,7 @@
 #include "NewCellTypes/GridURLCell.h"
 #include "StopStationDlg.h"
 #include "LoginDlg.h"
+#include "PassengerDlg.h"
 
 ticket_manage gl_manage;
 
@@ -17,20 +18,20 @@ ticket_manage gl_manage;
 
 
 
-// ÓÃÓÚÓ¦ÓÃ³ÌĞò¡°¹ØÓÚ¡±²Ëµ¥ÏîµÄ CAboutDlg ¶Ô»°¿ò
+// ç”¨äºåº”ç”¨ç¨‹åºâ€œå…³äºâ€èœå•é¡¹çš„ CAboutDlg å¯¹è¯æ¡†
 
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_ABOUTBOX };
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -48,7 +49,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CsvTicketMDlg ¶Ô»°¿ò
+// CsvTicketMDlg å¯¹è¯æ¡†
 
 
 
@@ -65,6 +66,7 @@ void CsvTicketMDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FROM_STATION_NAME, m_from_station);
 	DDX_Control(pDX, IDC_TO_STATION_NAME, m_to_station);
 	DDX_Control(pDX, IDC_TRAIN_DATE, m_train_date);
+	DDX_Control(pDX, IDC_PASSENGER_LIST, m_passenger_list);
 }
 
 BEGIN_MESSAGE_MAP(CsvTicketMDlg, CDialogEx)
@@ -75,18 +77,19 @@ BEGIN_MESSAGE_MAP(CsvTicketMDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_CHANGE_STATION, &CsvTicketMDlg::OnBnClickedBtnChangeStation)
 	ON_MESSAGE(WM_GRID_CELL_CLICK, &CsvTicketMDlg::OnGridCellClick)
 	ON_WM_TIMER()
+	ON_STN_CLICKED(IDC_BTN_SELECT, &CsvTicketMDlg::OnStnClickedBtnSelect)
 END_MESSAGE_MAP()
 
 
-// CsvTicketMDlg ÏûÏ¢´¦Àí³ÌĞò
+// CsvTicketMDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL CsvTicketMDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½«¡°¹ØÓÚ...¡±²Ëµ¥ÏîÌí¼Óµ½ÏµÍ³²Ëµ¥ÖĞ¡£
+	// å°†â€œå…³äº...â€èœå•é¡¹æ·»åŠ åˆ°ç³»ç»Ÿèœå•ä¸­ã€‚
 
-	// IDM_ABOUTBOX ±ØĞëÔÚÏµÍ³ÃüÁî·¶Î§ÄÚ¡£
+	// IDM_ABOUTBOX å¿…é¡»åœ¨ç³»ç»Ÿå‘½ä»¤èŒƒå›´å†…ã€‚
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -104,12 +107,12 @@ BOOL CsvTicketMDlg::OnInitDialog()
 		}
 	}
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// è®¾ç½®æ­¤å¯¹è¯æ¡†çš„å›¾æ ‡ã€‚å½“åº”ç”¨ç¨‹åºä¸»çª—å£ä¸æ˜¯å¯¹è¯æ¡†æ—¶ï¼Œæ¡†æ¶å°†è‡ªåŠ¨
+	//  æ‰§è¡Œæ­¤æ“ä½œ
+	SetIcon(m_hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(m_hIcon, FALSE);		// è®¾ç½®å°å›¾æ ‡
 
-	// TODO: ÔÚ´ËÌí¼Ó¶îÍâµÄ³õÊ¼»¯´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ é¢å¤–çš„åˆå§‹åŒ–ä»£ç 
 	OnInitGridCtrl();
 
 	m_train_date.SetFormat(_T("yyyy-MM-dd"));
@@ -117,25 +120,32 @@ BOOL CsvTicketMDlg::OnInitDialog()
 
 	if (gl_manage.login_init() != 1)
 	{
-		SetTimer(1, 1000, NULL);
+		SetTimer(1, 100, NULL);
 	}
 	gl_manage.get_station_name();
-
+	
+	// init auto completa edit control. 
 	m_from_station.Init();
 	m_from_station.SetMode(_MODE_CURSOR_O_LIST_);
-
 	m_from_station.AddSearchStrings(gl_manage.get_station_name_list());
 	m_from_station.SetSelectOnly(true);
 
 	m_to_station.Init();
 	m_to_station.SetMode(_MODE_CURSOR_O_LIST_);
-
 	m_to_station.AddSearchStrings(gl_manage.get_station_name_list());
 	m_to_station.SetSelectOnly(true);
 
+	// init passenger
+	m_passenger_list.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
 
+	m_passenger_list.InsertColumn(0, _T("å§“å"), LVCFMT_LEFT, 60);
+	m_passenger_list.InsertColumn(1, _T("è¯ä»¶å·ç "), LVCFMT_CENTER, 150);
+	m_passenger_list.InsertColumn(2, _T("å¸­åˆ«"), LVCFMT_CENTER, 65);
+	m_passenger_list.InsertColumn(3, _T("ç¥¨ç§"), LVCFMT_CENTER, 60);
 
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	m_passenger_list.SetTextBkColor(RGB(220,235,245));
+
+	return TRUE;  // é™¤éå°†ç„¦ç‚¹è®¾ç½®åˆ°æ§ä»¶ï¼Œå¦åˆ™è¿”å› TRUE
 }
 
 void CsvTicketMDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -151,19 +161,19 @@ void CsvTicketMDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// å¦‚æœå‘å¯¹è¯æ¡†æ·»åŠ æœ€å°åŒ–æŒ‰é’®ï¼Œåˆ™éœ€è¦ä¸‹é¢çš„ä»£ç 
+//  æ¥ç»˜åˆ¶è¯¥å›¾æ ‡ã€‚å¯¹äºä½¿ç”¨æ–‡æ¡£/è§†å›¾æ¨¡å‹çš„ MFC åº”ç”¨ç¨‹åºï¼Œ
+//  è¿™å°†ç”±æ¡†æ¶è‡ªåŠ¨å®Œæˆã€‚
 
 void CsvTicketMDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+		CPaintDC dc(this); // ç”¨äºç»˜åˆ¶çš„è®¾å¤‡ä¸Šä¸‹æ–‡
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// ä½¿å›¾æ ‡åœ¨å·¥ä½œåŒºçŸ©å½¢ä¸­å±…ä¸­
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -171,7 +181,7 @@ void CsvTicketMDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// »æÖÆÍ¼±ê
+		// ç»˜åˆ¶å›¾æ ‡
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -180,8 +190,8 @@ void CsvTicketMDlg::OnPaint()
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//å½“ç”¨æˆ·æ‹–åŠ¨æœ€å°åŒ–çª—å£æ—¶ç³»ç»Ÿè°ƒç”¨æ­¤å‡½æ•°å–å¾—å…‰æ ‡
+//æ˜¾ç¤ºã€‚
 HCURSOR CsvTicketMDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -208,22 +218,22 @@ void CsvTicketMDlg::OnInitGridCtrl()
 	m_Grid.SetFixedColumnCount(0);
 
 	CString TitleName[] = {
-		_T("³µ´Î"),
-		_T("·¢Õ¾"),
-		_T("µ½Õ¾"),
-		_T("ÀúÊ±"),
-		_T("ÉÌÎñ×ù"),
-		_T("ÌØµÈ×ù"),
-		_T("Ò»µÈ×ù"),
-		_T("¶şµÈ×ù"),
-		_T("¸ß¼¶ÈíÎÔ"),
-		_T("ÈíÎÔ"),
-		_T("Ó²ÎÔ"),
-		_T("Èí×ù"),
-		_T("Ó²×ù"),
-		_T("ÎŞ×ù"),
-		_T("ÆäËû"),
-		_T("¹ºÆ±")
+		_T("è½¦æ¬¡"),
+		_T("å‘ç«™"),
+		_T("åˆ°ç«™"),
+		_T("å†æ—¶"),
+		_T("å•†åŠ¡åº§"),
+		_T("ç‰¹ç­‰åº§"),
+		_T("ä¸€ç­‰åº§"),
+		_T("äºŒç­‰åº§"),
+		_T("é«˜çº§è½¯å§"),
+		_T("è½¯å§"),
+		_T("ç¡¬å§"),
+		_T("è½¯åº§"),
+		_T("ç¡¬åº§"),
+		_T("æ— åº§"),
+		_T("å…¶ä»–"),
+		_T("è´­ç¥¨")
 	};
 
 	for (int irow = 0; irow < 1; ++irow)
@@ -284,13 +294,13 @@ void CsvTicketMDlg::OnInitGridCtrl()
 void CsvTicketMDlg::OnBnClickedBtnQuery()
 {
 	UpdateData();
-	bool m_surplus_query = true;	//ÆôÓÃÓàÆ±²éÑ¯
+	bool m_surplus_query = true;	//å¯ç”¨ä½™ç¥¨æŸ¥è¯¢
 
 	CString stime;
 	GetDlgItemText(IDC_TRAIN_DATE, stime);
 	//AfxMessageBox(stime);
 
-	// Çå¿ÕgridÀúÊ·Êı¾İ
+	// æ¸…ç©ºgridå†å²æ•°æ®
 	m_Grid.DeleteNonFixedRows();
 
 	//AfxMessageBox(m_from_station.GetItemValue());
@@ -347,7 +357,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 				str = win32_A2U(data_list[idx].from_station_name.c_str());
 				if (data_list[idx].start_station_telecode == data_list[idx].from_station_telecode)
 				{
-					str += _T("[Ê¼]\r\n");
+					str += _T("[å§‹]\r\n");
 				}
 				else
 				{
@@ -359,7 +369,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 				str = win32_A2U(data_list[idx].to_station_name.c_str());
 				if (data_list[idx].to_station_telecode == data_list[idx].end_station_telecode)
 				{
-					str += "[ÖÕ]\r\n";
+					str += "[ç»ˆ]\r\n";
 				}
 				else
 				{
@@ -371,19 +381,19 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 				str = win32_A2U(data_list[idx].lishi.c_str());
 				if (data_list[idx].day_difference == "0")
 				{
-					str += "\r\nµ±ÈÕµ½´ï";
+					str += "\r\nå½“æ—¥åˆ°è¾¾";
 				}
 				else if (data_list[idx].day_difference == "1")
 				{
-					str += "\r\n´ÎÈÕµ½´ï";
+					str += "\r\næ¬¡æ—¥åˆ°è¾¾";
 				}
 				else if (data_list[idx].day_difference == "2")
 				{
-					str += "\r\nÁ½ÈÕµ½´ï";
+					str += "\r\nä¸¤æ—¥åˆ°è¾¾";
 				}
 				else if (data_list[idx].day_difference == "3")
 				{
-					str += "\r\nÈıÈÕµ½´ï";
+					str += "\r\nä¸‰æ—¥åˆ°è¾¾";
 				}
 
 				break;
@@ -423,7 +433,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 			case 15:
 				str = win32_A2U(data_list[idx].buttonTextInfo.c_str());
 				str.Replace(_T("<br/>"), _T("\r\n"));
-				str.Replace(_T("ÆğÊÛ"), _T("ÊÛ"));
+				str.Replace(_T("èµ·å”®"), _T("å”®"));
 				break;
 			default:
 				break;
@@ -442,7 +452,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 			m_Grid.SetItem(&Item);
 
 			m_Grid.SetItemState(irow, icol, m_Grid.GetItemState(irow, icol) | GVIS_READONLY);
-			if (icol == 1 || icol == 2 || icol == 3 || (icol == 15 && str != _T("Ô¤¶©")))
+			if (icol == 1 || icol == 2 || icol == 3 || (icol == 15 && str != _T("é¢„è®¢")))
 			{
 				m_Grid.SetItemFormat(irow,icol, DT_VCENTER|DT_CENTER);
 			}
@@ -451,7 +461,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 				m_Grid.SetItemFormat(irow,icol, DT_VCENTER|DT_CENTER|DT_SINGLELINE);
 			}
 
-			if (icol == 0 || (icol == 15 && str == _T("Ô¤¶©")) )
+			if (icol == 0 || (icol == 15 && str == _T("é¢„è®¢")) )
 			{
 				m_Grid.SetCellType(irow,icol, RUNTIME_CLASS(CGridURLCell));
 			}
@@ -504,7 +514,7 @@ void CsvTicketMDlg::OnClickedStopStation(int wp, int lp)
 
 BOOL CsvTicketMDlg::PreTranslateMessage(MSG* pMsg)
 {
-	// TODO: ÔÚ´ËÌí¼Ó×¨ÓÃ´úÂëºÍ/»òµ÷ÓÃ»ùÀà
+	// TODO: åœ¨æ­¤æ·»åŠ ä¸“ç”¨ä»£ç å’Œ/æˆ–è°ƒç”¨åŸºç±»
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)
 	{
 		return TRUE;
@@ -534,4 +544,44 @@ bool CsvTicketMDlg::OnInitLogin()
 	}
 	
 	return false;
+}
+
+void CsvTicketMDlg::OnStnClickedBtnSelect()
+{
+	m_passenger_list.DeleteAllItems();
+
+	CPassengerDlg passenger_dlg;
+	if (passenger_dlg.DoModal() == IDOK)
+	{
+		std::vector<passenger_datum> passenger_list = gl_manage.get_passengers().get_passenger_datum_list();
+
+		std::vector<passenger_datum>::iterator iter = passenger_list.begin();
+		int i = 0;
+		for (iter; iter != passenger_list.end(); ++iter, ++i)
+		{
+			passenger_datum passenger = *iter;
+
+			int col = m_passenger_list.InsertItem(i, win32_A2U(passenger.get_passenger_name().c_str()));
+			m_passenger_list.SetItemText(col, 1, win32_A2U(passenger.get_passenger_id_no().c_str()));
+			
+			//m_passenger_list.SetItemText(col, 2, win32_A2U(passenger.get_seat_type().c_str()));
+			if (passenger.get_seat_type() == "YZ")
+			{
+				m_passenger_list.SetItemText(col, 2, _T("ç¡¬åº§"));
+			}
+			else
+			{
+				m_passenger_list.SetItemText(col, 2, _T("é»˜è®¤"));
+			}
+
+			if (passenger.get_ticket_type() == "1")
+			{
+				m_passenger_list.SetItemText(col, 3, _T("æˆäºº"));
+			}
+			else if (passenger.get_ticket_type() == "2")
+			{
+				m_passenger_list.SetItemText(col, 3, _T("å„¿ç«¥"));
+			}
+		}
+	}
 }
