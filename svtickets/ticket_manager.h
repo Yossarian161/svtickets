@@ -3,8 +3,6 @@
 
 #include <vector>
 #include "svhttp.h"
-#include "svlogger.h"
-#include "bencode.h"
 
 #include "station.hpp"
 #include "left_ticket.hpp"
@@ -62,6 +60,9 @@ public:
 	// 查询列车停靠站 信息
 	bool query_stop_station(unsigned int index);
 	stop_station& get_stop_station(){ return m_stop_station; };
+	// 查询 车票价格
+	bool query_ticket_price(train_data& _train_data);
+	ticket_price& get_ticket_price() { return m_ticket_price; }
 
 	/**
 	 *	获取乘客信息
@@ -122,6 +123,8 @@ private:
 	
 	// 列车停靠站
 	stop_station m_stop_station;
+	// 车票各座位价格
+	ticket_price m_ticket_price;
 
 	// 联系人(乘客)管理
 	passenger_dto m_passenger_dto;

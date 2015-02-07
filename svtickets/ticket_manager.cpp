@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include "jsoncpp/include/json.h"
-#include "bencode.h"
 
 #include "ticket_manager.h"
 #include "dynamic_encrypt.hpp"
@@ -34,7 +33,7 @@ int ticket_manage::login_init()
 	
 	std::string reponse_str = _client.read_some();
 	convert_str("utf-8", "gbk", reponse_str);
-
+	SVLOGGER_FILE << reponse_str;
 	int x_pos,d_pos;
 	
 	// 判断是否已登录
@@ -43,6 +42,8 @@ int ticket_manage::login_init()
 	std::string sub_str = reponse_str.substr(x_pos+15, d_pos-x_pos-15);
 	if (!sub_str.empty())	// cookies已经登录
 	{
+		string_replace(sub_str, "\\\\", "\\");
+		user_name_cn = unicode_decode(sub_str);
 		SVLOGGER_INFO << sub_str;
 		return 1;
 	}
@@ -55,6 +56,13 @@ int ticket_manage::login_init()
 		std::string dynamic_url = "https://kyfw.12306.cn/otn/dynamicJs/" + reponse_str.substr(x_pos+10, d_pos-x_pos-10);
 		SVLOGGER_INFO << dynamic_url;
 		
+		request_header opts;
+		opts.insert(std::string("Accept: application/javascript, */*;q=0.8"));
+		opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/login/init"));
+		opts.insert(std::string("Connection: Keep-Alive"));
+		//opts.insert(std::string("DNT: 1"));
+		_client.set_headers(opts);
+
 		// 请求dynamicJs地址，获取dynamic key
 		if(!_client.open(dynamic_url))
 		{
@@ -62,9 +70,9 @@ int ticket_manage::login_init()
 			return -1;
 		}
 
-		//SVLOGGER_INFO << _client.read_some();
 		reponse_str = _client.read_some();
 		convert_str("utf-8", "gbk", reponse_str);
+		SVLOGGER_FILE << reponse_str;
 
 		x_pos = reponse_str.find("key='");
 		d_pos = reponse_str.find("'", x_pos+5);
@@ -75,8 +83,31 @@ int ticket_manage::login_init()
 		dynamic_value = encode32(bin216(base32_encrypt("1111", dynamic_key)));
 		SVLOGGER_DBG << dynamic_value;
 
-		login_passcode_reflush();
+		/**
+		 *	验证是否需要再次进行dynamicJs 调用
+		 */
+		x_pos = reponse_str.find("dynamicJs/");
+		if (x_pos != -1)
+		{
+			x_pos = reponse_str.find("dynamicJs/", x_pos+10);
+			if (x_pos != -1)
+			{
+				// 查询到两次 dynamicJs链接，需要进行第二次post
+				d_pos = reponse_str.find("'", x_pos+10);
+				std::string dynamic_url_2 = "https://kyfw.12306.cn/otn/dynamicJs/" + reponse_str.substr(x_pos+10, d_pos-x_pos-10);
+				SVLOGGER_INFO << dynamic_url_2;
 
+				_client.set_post_fields("");
+				// 请求dynamicJs地址，获取dynamic key
+				if(!_client.open(dynamic_url))
+				{
+					_error_buf = _client.get_error_buffer();
+					return -1;
+				}
+			}
+		}
+
+		login_passcode_reflush();
 		return 0;
 	}
 	
@@ -172,6 +203,13 @@ bool ticket_manage::login_verify(const std::string& username, const std::string&
 {
 	if (!login_passcode_verify(passcode))
 	{
+		return false;
+	}
+
+	// update 加载动画
+	if(!_client.open("https://kyfw.12306.cn/otn/resources/images/loading.gif"))
+	{
+		_error_buf = _client.get_error_buffer();
 		return false;
 	}
 
@@ -408,10 +446,8 @@ bool ticket_manage::query_train_data(left_ticket_dto& ticket_dto)
 		+ ticket_dto.get_query_string();
 
 	request_header opts;
-	opts.insert(std::string("Referer:https://kyfw.12306.cn/otn/leftTicket/init"));
+	opts.insert(std::string("Referer:https://kyfw.12306.cn/otn/lcxxcx/init"));
 	opts.insert(std::string("Accept-Encoding:gzip,deflate,sdch"));
-	opts.insert(std::string("Connection: Keep-Alive"));
-	opts.insert(std::string("If-Modified-Since: 0"));
 	_client.set_headers(opts);
 
 	if (!_client.open(url))
@@ -544,7 +580,7 @@ bool ticket_manage::query_train_data_surplus( left_ticket_dto& ticket_dto )
 		return false;
 	}
 
-	if (!reader_object.isMember("status"))
+	if (is_num(reponse_str) || !reader_object.isMember("status"))
 	{
 		_error_buf = "返回数据错误";
 		SVLOGGER_DBG << reponse_str;
@@ -630,7 +666,8 @@ bool ticket_manage::query_train_data_surplus( left_ticket_dto& ticket_dto )
 
 bool ticket_manage::query_stop_station(unsigned int index)
 {
-	train_data _train = (train_data_vec.size()<index)?train_data_surplus_vec[index]:train_data_vec[index];
+	train_data _train = (/*train_data_vec.size() == 0 || */train_data_vec.size() <= index+1) ?
+		train_data_surplus_vec[index]:train_data_vec[index];
 
 	std::ostringstream osstr;
 	osstr << "https://kyfw.12306.cn/otn/czxx/queryByTrainNo?train_no=" << _train.train_no
@@ -696,6 +733,94 @@ bool ticket_manage::query_stop_station(unsigned int index)
 			m_stop_station.push_stop_station_info(stat_info);
 		}
 	}
+	return true;
+}
+
+bool ticket_manage::query_ticket_price(train_data& _train_data)
+{
+	std::ostringstream osstr;
+	osstr << "https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=" << _train_data.train_no
+		<< "&from_station_no=" << _train_data.from_station_no
+		<< "&to_station_no=" << _train_data.to_station_no
+		<< "&seat_types=" << _train_data.seat_types
+		<< "&train_date=" << _train_data.train_date;
+
+	request_header opts;
+	opts.insert(std::string("Referer: https://kyfw.12306.cn/otn/leftTicket/init"));
+	opts.insert(std::string("Accept-Encoding:gzip,deflate,sdch"));
+	_client.set_headers(opts);
+
+	if (!_client.open(osstr.str()))
+	{
+		_error_buf = _client.get_error_buffer();
+		return false;
+	}
+
+	std::string reponse_str = _client.read_some();
+	convert_str("utf-8", "gbk", reponse_str);
+
+	Json::Reader reader;
+	Json::Value reader_object;
+
+	if (!reader.parse(reponse_str, reader_object))
+	{
+		_error_buf = "返回json数据解析失败";
+		SVLOGGER_DBG << reponse_str;
+		return false;
+	}
+
+	if (!reader_object["status"].asBool() == true)
+	{
+		Json::Value msg = reader_object["messages"];
+		_error_buf =  msg[(unsigned int)0].asString();
+		return false;
+	}
+	else
+	{
+		Json::Value price_obj = reader_object["data"];
+
+		if (price_obj.isMember("A9"))
+		{
+			m_ticket_price.swz_price = price_obj["A9"].asString();
+		}
+		if (price_obj.isMember("P"))
+		{
+			m_ticket_price.tz_price = price_obj["P"].asString();
+		}
+		if (price_obj.isMember("M"))
+		{
+			m_ticket_price.zy_price = price_obj["M"].asString();
+		}
+		if (price_obj.isMember("O"))
+		{
+			m_ticket_price.ze_price = price_obj["O"].asString();
+		}
+		if (price_obj.isMember("A6"))
+		{
+			m_ticket_price.gr_price = price_obj["A6"].asString();
+		}
+		if (price_obj.isMember("A4"))
+		{
+			m_ticket_price.rw_price = price_obj["A4"].asString();
+		}
+		if (price_obj.isMember("A3"))
+		{
+			m_ticket_price.yw_price = price_obj["A3"].asString();
+		}
+		if (price_obj.isMember("A2"))
+		{
+			m_ticket_price.rz_price = price_obj["A2"].asString();
+		}
+		if (price_obj.isMember("A1"))
+		{
+			m_ticket_price.yz_price = price_obj["A1"].asString();
+		}
+		if (price_obj.isMember("WZ"))
+		{
+			m_ticket_price.wz_price = price_obj["WZ"].asString();
+		}
+	}
+
 	return true;
 }
 
@@ -770,6 +895,7 @@ bool ticket_manage::query_passengers()
 	}
 	else
 	{
+		// 清空已有联系人列表
 		m_passenger_dto.contacts_datum_clear();
 
 		Json::Value pax_data_obj = reader_object["data"]["datas"];
@@ -780,6 +906,7 @@ bool ticket_manage::query_passengers()
 			return false;
 		}
 
+		// 将获取的新联系人信息push到联系人列表中
 		for (unsigned int idx = 0; idx < pax_data_obj.size(); ++idx)
 		{
 			contacts_datum contacts;
@@ -931,7 +1058,7 @@ bool ticket_manage::submit_order_request( train_data& _train_data )
 	osstr << _client.str_escape(dynamic_key) << "=" << _client.str_escape(dynamic_value)
 		<< "&myversion=undefined&secretStr=" << _train_data.secretStr
 		<< "&train_date=" << _train_data.train_date
-		<< "&back_train_date=" << svlogger::get_now_time(2)
+		<< "&back_train_date=" << svhttp::get_now_time(2)
 		<< "&tour_flag=dc&purpose_codes=" << _train_data.purpose_codes
 		<< "&query_from_station_name=" << _train_data.from_station_name
 		<< "&query_to_station_name=" << _train_data.to_station_name

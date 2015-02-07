@@ -129,6 +129,12 @@
     <ClInclude Include="..\..\svtickets\passenger.h">
       <Filter>svtickets</Filter>
     </ClInclude>
+    <ClInclude Include="CheckOrderDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svhttp\http_client.h">
+      <Filter>svhttp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="svTicketM.cpp">
@@ -173,9 +179,6 @@
     <ClCompile Include="..\..\svhttp\bencode.cpp">
       <Filter>svhttp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\svhttp\svhttp.cpp">
-      <Filter>svhttp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\svhttp\svlogger.cpp">
       <Filter>svhttp</Filter>
     </ClCompile>
@@ -198,6 +201,15 @@
       <Filter>svtickets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\svtickets\passenger.cpp">
+      <Filter>svtickets</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckOrderDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svhttp\http_client.cpp">
+      <Filter>svhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\dynamic_encrypt.cpp">
       <Filter>svtickets</Filter>
     </ClCompile>
   </ItemGroup>

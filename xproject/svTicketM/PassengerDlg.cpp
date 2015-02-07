@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CPassengerDlg, CDialogEx)
 	ON_NOTIFY(NM_DBLCLK, IDC_PASSENGER_LIST, &CPassengerDlg::OnNMDblclkPassengerList)
 	ON_NOTIFY(NM_CLICK, IDC_PASSENGER_LIST, &CPassengerDlg::OnNMClickPassengerList)
 	ON_BN_CLICKED(IDOK, &CPassengerDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BTN_UPDATA, &CPassengerDlg::OnBnClickedBtnUpdata)
 END_MESSAGE_MAP()
 
 
@@ -88,10 +89,12 @@ void CPassengerDlg::OnInitGridData()
 		gl_manage.query_passengers();
 	}
 	
-	std::vector<contacts_datum> contacts_list = gl_manage.get_passengers().get_contacts_datum_list();
-
-	std::vector<contacts_datum>::iterator iter = contacts_list.begin();
+	m_passenger_list.DeleteAllItems();
+	
 	int i = 0;
+	std::vector<contacts_datum> contacts_list = gl_manage.get_passengers().get_contacts_datum_list();
+	std::vector<contacts_datum>::iterator iter = contacts_list.begin();
+
 	for (iter; iter != contacts_list.end(); ++iter, ++i)
 	{
 		contacts_datum contacts = *iter;
@@ -285,4 +288,11 @@ void CPassengerDlg::OnBnClickedOk()
 // 	}
 
 	OnOK();
+}
+
+
+void CPassengerDlg::OnBnClickedBtnUpdata()
+{
+	gl_manage.query_passengers();
+	OnInitGridData();
 }

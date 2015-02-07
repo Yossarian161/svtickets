@@ -11,6 +11,8 @@
 #include "autoComplete/StationEdit.h"
 #include "afxcmn.h"
 
+#include "CheckOrderDlg.h"
+
 extern ticket_manage gl_manage;
 
 // CsvTicketMDlg 对话框
@@ -33,28 +35,38 @@ protected:
 
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg LRESULT OnGridCellClick(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	DECLARE_MESSAGE_MAP()
+
 public:
-	CGridCtrl m_Grid;
+	void OnInitControl();
 	void OnInitGridCtrl();
 	afx_msg void OnBnClickedBtnQuery();
-	CStationEdit m_from_station;
-	CStationEdit m_to_station;
-
-	
-	CDateTimeCtrl m_train_date;
 	afx_msg void OnBnClickedBtnChangeStation();
-
-	void OnClickedStopStation(int wp, int lp);
-
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnStnClickedBtnSelect();
 
 	bool OnInitLogin();
+
+	void OnClickedStopStation(int wp, int lp);
+	void OnClickedSubmitOrder(int wp, int lp);
+
+	// 显示/隐藏 订单确认 画面
+	void ShowCheckOrderDialog(bool bshow = true);
+	// 
+	void svTicketRunLogPush(CString str_msg);
+public:
+	CGridCtrl m_Grid;
+	
+	CStationEdit m_from_station;
+	CStationEdit m_to_station;
+	CDateTimeCtrl m_train_date;
+
 	CListCtrl m_passenger_list;
-	afx_msg void OnStnClickedBtnSelect();
+
+	CCheckOrderDlg* m_checkorder_dlg;
 };

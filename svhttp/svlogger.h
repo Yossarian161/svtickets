@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "posix_time.hpp"
 
 namespace svlogger
 {
@@ -11,12 +12,6 @@ namespace svlogger
 
 	// 读取文件file_path的数据保存在str_output中。
 	bool read_file(const std::string file_path, std::string& str_output);
-
-	/* 获取当前时间，返回时间字符串格式:[yyyy-mm-dd hh24:mi:ss]
-	 * time_type = 1，返回时间格式: [hh24:mi:ss.ms]
-	 * time_type = 2, 返回日期格式: [yyyy-mm-dd]
-	 */
-	std::string get_now_time(int time_type = 0);
 
 	// 定义logger 信息等级
 	static std::string LOGGER_DEBUG_STR = "DEBUG";
@@ -90,6 +85,9 @@ namespace svlogger
 		void set_file_path(std::string file_path)
 		{
 			_file_path = file_path;
+
+			std::string start_string = "\n\n\n*** starting log ***\n\n\n";
+			save_file(_file_path, start_string);
 		}
 	private:
 		file_aux(){};

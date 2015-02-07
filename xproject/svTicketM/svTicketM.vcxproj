@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\svhttp\bencode.h" />
+    <ClInclude Include="..\..\svhttp\http_client.h" />
     <ClInclude Include="..\..\svhttp\svhttp.h" />
     <ClInclude Include="..\..\svhttp\svlogger.h" />
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="autoComplete\StationEdit.h" />
     <ClInclude Include="autoComplete\StationListWnd.h" />
     <ClInclude Include="checkCombobox\CheckComboBox.h" />
+    <ClInclude Include="CheckOrderDlg.h" />
     <ClInclude Include="GridCtrl_src\CellRange.h" />
     <ClInclude Include="GridCtrl_src\GridCell.h" />
     <ClInclude Include="GridCtrl_src\GridCellBase.h" />
@@ -145,10 +147,13 @@
     <ClCompile Include="..\..\svhttp\bencode.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\svhttp\svhttp.cpp">
+    <ClCompile Include="..\..\svhttp\http_client.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\svhttp\svlogger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\dynamic_encrypt.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\svtickets\passenger.cpp">
@@ -166,6 +171,7 @@
     <ClCompile Include="autoComplete\StationEdit.cpp" />
     <ClCompile Include="autoComplete\StationListWnd.cpp" />
     <ClCompile Include="checkCombobox\CheckComboBox.cpp" />
+    <ClCompile Include="CheckOrderDlg.cpp" />
     <ClCompile Include="GridCtrl_src\GridCell.cpp" />
     <ClCompile Include="GridCtrl_src\GridCellBase.cpp" />
     <ClCompile Include="GridCtrl_src\GridCtrl.cpp" />

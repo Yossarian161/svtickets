@@ -51,6 +51,7 @@ BOOL CsvTicketMApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	AfxInitRichEdit2();
 
 	AfxEnableControlContainer();
 

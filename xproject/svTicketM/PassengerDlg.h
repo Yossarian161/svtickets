@@ -33,4 +33,5 @@ public:
 
 	bool ListCheckJudge(int iItem);	// listctrl checkbox选择判定<判定本次check事件是否应当响应>。
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedBtnUpdata();
 };

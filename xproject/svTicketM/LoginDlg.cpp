@@ -88,7 +88,9 @@ void CLoginDlg::OnBnClickedBtn01()
 		{
 			AfxMessageBox(win32_A2U((gl_manage.get_error_buffer()).c_str()));
 
-			//gl_manage.login_init();
+			gl_manage.login_init();
+			std::string pass_str = decaptchaImage("./data/pass.png");
+			SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
 		}
 		else
 		{

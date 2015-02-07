@@ -3,13 +3,13 @@
 
 #include "stdafx.h"
 
-#include "12306_help.h"
+#include "svticket.h"
 #include <iostream>
 #include "xdecaptcha.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-#if 1
+#if 0
 	SVLOGGER_INIT_PATH("./data/log.txt");
 	ticket_manage _manage;
 
@@ -62,8 +62,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	//
 	//_manage.query_passengers();
+
+	SVLOGGER_ERR << svhttp::get_now_time(3);
 	
-	_manage.confirm_passenger_initdc();
+	//_manage.confirm_passenger_initdc();
 #endif
 //	_manage.login_out();
 _error:

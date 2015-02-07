@@ -54,7 +54,7 @@ public:
 class passenger_datum
 {
 public:
-	void set_passenger_datum(contacts_datum& contacts, const std::string& ttype = "1" ,const std::string& stype = "YZ");
+	void set_passenger_datum(contacts_datum& contacts, const std::string& ttype = "0" ,const std::string& stype = "YZ");
 
 	void set_passenger_name(const std::string& pname);
 	void set_passenger_id_type(const std::string& ptype);
@@ -142,6 +142,18 @@ private:
 
 	// 已选乘客 列表
 	std::vector<passenger_datum> passenger_datum_list;
+};
+
+// 座位类型 <席别>
+class seats_type
+{
+public:
+	static std::string get_seat_type_name(const std::string& seat_type, bool utype = true);
+	static std::string get_seat_type_code(const std::string& seat_type);
+	static std::string get_seat_type(const std::string& seat_code);
+private:
+	static std::string get_seat_info_from_type(const std::string& seat_type, int ret_code = 1);
+	static std::string get_seat_info_from_code(const std::string& seat_code, int ret_type = 1);
 };
 
 #endif

@@ -53,7 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../external/libcurl/include;../../svhttp;../../external;../../svtickets</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../external/libcurl/include;../../svhttp;../../external;../../svtickets;../win32-utils</AdditionalIncludeDirectories>
       <AdditionalOptions>/D "_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -85,10 +85,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\svhttp\bencode.h" />
+    <ClInclude Include="..\..\svhttp\http_client.h" />
     <ClInclude Include="..\..\svhttp\svhttp.h" />
     <ClInclude Include="..\..\svhttp\svlogger.h" />
-    <ClInclude Include="..\..\svtickets\12306_help.h" />
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp" />
+    <ClInclude Include="..\..\svtickets\left_ticket.hpp" />
+    <ClInclude Include="..\..\svtickets\passenger.h" />
+    <ClInclude Include="..\..\svtickets\station.hpp" />
+    <ClInclude Include="..\..\svtickets\svticket.h" />
+    <ClInclude Include="..\..\svtickets\ticket_manager.h" />
+    <ClInclude Include="..\win32-utils\xdecaptcha.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -96,13 +102,22 @@
     <ClCompile Include="..\..\svhttp\bencode.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\svhttp\svhttp.cpp">
+    <ClCompile Include="..\..\svhttp\http_client.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\svhttp\svlogger.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\svtickets\12306_help.cpp">
+    <ClCompile Include="..\..\svtickets\dynamic_encrypt.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\passenger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\ticket_manager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\win32-utils\xdecaptcha.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">

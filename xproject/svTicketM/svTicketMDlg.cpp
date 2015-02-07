@@ -113,37 +113,24 @@ BOOL CsvTicketMDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	OnInitGridCtrl();
-
-	m_train_date.SetFormat(_T("yyyy-MM-dd"));
+	ip138 _ip_138;
+	CString ip_msg;
+	ip_msg.Format(_T("%s"), win32_A2U(_ip_138.get_reponse_str().c_str()));
+	svTicketRunLogPush(ip_msg);
 	//
-
 	if (gl_manage.login_init() != 1)
 	{
 		SetTimer(1, 100, NULL);
 	}
-	gl_manage.get_station_name();
+	else
+	{
+		CString username = win32_A2U(gl_manage.get_username_cn().c_str());
+		CString msg;
+		msg.Format(_T("用户：[%s] 成功登录。"), username);
+		svTicketRunLogPush(msg);
+	}
 	
-	// init auto completa edit control. 
-	m_from_station.Init();
-	m_from_station.SetMode(_MODE_CURSOR_O_LIST_);
-	m_from_station.AddSearchStrings(gl_manage.get_station_name_list());
-	m_from_station.SetSelectOnly(true);
-
-	m_to_station.Init();
-	m_to_station.SetMode(_MODE_CURSOR_O_LIST_);
-	m_to_station.AddSearchStrings(gl_manage.get_station_name_list());
-	m_to_station.SetSelectOnly(true);
-
-	// init passenger
-	m_passenger_list.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
-
-	m_passenger_list.InsertColumn(0, _T("姓名"), LVCFMT_LEFT, 60);
-	m_passenger_list.InsertColumn(1, _T("证件号码"), LVCFMT_CENTER, 150);
-	m_passenger_list.InsertColumn(2, _T("席别"), LVCFMT_CENTER, 65);
-	m_passenger_list.InsertColumn(3, _T("票种"), LVCFMT_CENTER, 60);
-
-	m_passenger_list.SetTextBkColor(RGB(220,235,245));
+	OnInitControl();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -197,18 +184,59 @@ HCURSOR CsvTicketMDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CsvTicketMDlg::OnInitControl()
+{
+	gl_manage.get_station_name();
+
+	// init train date
+	m_train_date.SetFormat(_T("yyyy-MM-dd"));
+
+	// init auto completa edit control. 
+	m_from_station.Init();
+	m_from_station.SetMode(_MODE_CURSOR_O_LIST_);
+	m_from_station.AddSearchStrings(gl_manage.get_station_name_list());
+	m_from_station.SetSelectOnly(true);
+
+	m_to_station.Init();
+	m_to_station.SetMode(_MODE_CURSOR_O_LIST_);
+	m_to_station.AddSearchStrings(gl_manage.get_station_name_list());
+	m_to_station.SetSelectOnly(true);
+
+	// init passenger
+	m_passenger_list.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
+
+	m_passenger_list.InsertColumn(0, _T("姓名"), LVCFMT_LEFT, 60);
+	m_passenger_list.InsertColumn(1, _T("证件号码"), LVCFMT_CENTER, 150);
+	m_passenger_list.InsertColumn(2, _T("席别"), LVCFMT_CENTER, 65);
+	m_passenger_list.InsertColumn(3, _T("票种"), LVCFMT_CENTER, 60);
+
+	m_passenger_list.SetTextBkColor(RGB(220,235,245));
+
+	// init grid_ctrl.
+	OnInitGridCtrl();
+
+	// check order dlg.
+	m_checkorder_dlg = new CCheckOrderDlg;
+	m_checkorder_dlg->Create(IDD_CHECK_ORDER_DLG);
+	m_checkorder_dlg->SetParent(this);
+	m_checkorder_dlg->ShowWindow(SW_HIDE);
+}
+
 void CsvTicketMDlg::OnInitGridCtrl()
 {
 	int nCol = 16;
 
 	m_Grid.SetFixedColumnSelection(TRUE);
+	m_Grid.SetTrackFocusCell(FALSE);
+	m_Grid.SetFrameFocusCell(FALSE);
 //	m_Grid.SetFixedRowSelection(TRUE);
 //	m_Grid.EnableColumnHide();
 	m_Grid.EnableSelection(FALSE);
 //	m_Grid.SetCompareFunction(CGridCtrl::pfnCellNumericCompare);
 
-	m_Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr(RGB(0xFF, 0xFF, 0xE0));
+	m_Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr(RGB(222,233,241));
 	//m_Grid.SetGridLineColor(RGB(0,255,0));
+	m_Grid.SetGridBkColor(RGB(255,255,255));
 	//m_Grid.SetAutoSizeStyle();
 	m_Grid.SetScrollNoDisable(1, true);
 
@@ -293,7 +321,13 @@ void CsvTicketMDlg::OnInitGridCtrl()
 
 void CsvTicketMDlg::OnBnClickedBtnQuery()
 {
-	UpdateData();
+	ShowCheckOrderDialog(false);
+	
+	if (m_from_station.GetItemValue().IsEmpty() || m_to_station.GetItemValue().IsEmpty())
+	{
+		AfxMessageBox(_T("出发地或目的地不允许为空！"));
+		return ;
+	}
 	bool m_surplus_query = true;	//启用余票查询
 
 	CString stime;
@@ -493,9 +527,13 @@ void CsvTicketMDlg::OnBnClickedBtnChangeStation()
 
 LRESULT CsvTicketMDlg::OnGridCellClick(WPARAM wParam, LPARAM lParam)
 {
-	if ((unsigned int)lParam == 0)
+	if ((unsigned int)lParam == 0)	// 车次
 	{
 		OnClickedStopStation(wParam, lParam);
+	}
+	else if ((unsigned int)lParam == 15)	// 预定
+	{
+		OnClickedSubmitOrder(wParam, lParam);
 	}
 
 	return 0;
@@ -514,7 +552,7 @@ void CsvTicketMDlg::OnClickedStopStation(int wp, int lp)
 
 BOOL CsvTicketMDlg::PreTranslateMessage(MSG* pMsg)
 {
-	// TODO: 在此添加专用代码和/或调用基类
+	// 屏蔽 esc 退出窗口事件响应
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)
 	{
 		return TRUE;
@@ -540,6 +578,10 @@ bool CsvTicketMDlg::OnInitLogin()
 	CLoginDlg dlg;
 	if (dlg.DoModal() == IDOK)
 	{
+		CString username = win32_A2U(gl_manage.get_username_cn().c_str());
+		CString msg;
+		msg.Format(_T("用户：[%s] 成功登录。"), username);
+		svTicketRunLogPush(msg);
 		return true;
 	}
 	
@@ -583,5 +625,87 @@ void CsvTicketMDlg::OnStnClickedBtnSelect()
 				m_passenger_list.SetItemText(col, 3, _T("儿童"));
 			}
 		}
+
+		// 同时更新check_order 中的乘客列表
+		m_checkorder_dlg->updatePassengerInfo();
 	}
+
+	UpdateData(FALSE);
 }
+
+// 预定
+void CsvTicketMDlg::OnClickedSubmitOrder( int wp, int lp )
+{
+	ShowCheckOrderDialog();
+
+	m_checkorder_dlg->m_train_info = gl_manage.get_train_data_surplus_list()[wp-1];
+	m_checkorder_dlg->updateTrainInfo();
+
+	UpdateData(FALSE);
+}
+
+void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
+{
+	static bool static_show_status = false;
+
+	CRect mrect, orect;
+
+	if (bshow)	// 显示checkorder界面
+	{
+		if (!static_show_status)
+		{
+			static_show_status = true;
+
+			GetDlgItem(IDC_GRID)->GetWindowRect(&mrect);
+			m_checkorder_dlg->GetWindowRect(&orect);
+
+			ScreenToClient(mrect);
+			mrect.bottom -= 158;
+			mrect.right += 4;
+
+			GetDlgItem(IDC_GRID)->MoveWindow(mrect);
+
+			orect.left = mrect.left;
+			orect.bottom = mrect.bottom + orect.Height();
+			orect.top = mrect.bottom;
+			orect.right = mrect.right;
+			m_checkorder_dlg->MoveWindow(orect);
+
+			m_checkorder_dlg->ShowWindow(SW_SHOW);
+		}
+	}
+	else
+	{
+		if (static_show_status)
+		{
+			static_show_status = false;
+
+			GetDlgItem(IDC_GRID)->GetWindowRect(&mrect);
+			m_checkorder_dlg->GetWindowRect(&orect);
+
+			ScreenToClient(mrect);
+			mrect.bottom += 158;
+
+			GetDlgItem(IDC_GRID)->MoveWindow(mrect);
+			m_checkorder_dlg->ShowWindow(SW_HIDE);
+		}
+	}
+
+	UpdateData(FALSE);
+	Invalidate(TRUE);
+}
+
+void CsvTicketMDlg::svTicketRunLogPush( CString str_msg )
+{
+	UpdateData(TRUE);
+	CString pre_str;
+	GetDlgItemText(IDC_EDIT_RUNLOG, pre_str);
+	
+	pre_str += win32_A2U(svhttp::get_now_time(3).c_str());
+	pre_str += _T("  ");
+	pre_str += str_msg;
+	pre_str += _T("\n");
+	SetDlgItemText(IDC_EDIT_RUNLOG, pre_str);
+	UpdateData(FALSE);
+}
+

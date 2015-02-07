@@ -39,11 +39,29 @@
     <ClInclude Include="..\..\svhttp\svlogger.h">
       <Filter>svhttp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\svtickets\12306_help.h">
-      <Filter>svtickets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp">
       <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\left_ticket.hpp">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\passenger.h">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\station.hpp">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\svticket.h">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svtickets\ticket_manager.h">
+      <Filter>svtickets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\win32-utils\xdecaptcha.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\svhttp\http_client.h">
+      <Filter>svhttp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,13 +74,22 @@
     <ClCompile Include="..\..\svhttp\bencode.cpp">
       <Filter>svhttp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\svhttp\svhttp.cpp">
-      <Filter>svhttp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\svhttp\svlogger.cpp">
       <Filter>svhttp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\svtickets\12306_help.cpp">
+    <ClCompile Include="..\..\svtickets\passenger.cpp">
+      <Filter>svtickets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\ticket_manager.cpp">
+      <Filter>svtickets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\win32-utils\xdecaptcha.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svhttp\http_client.cpp">
+      <Filter>svhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svtickets\dynamic_encrypt.cpp">
       <Filter>svtickets</Filter>
     </ClCompile>
   </ItemGroup>

@@ -120,9 +120,197 @@ public:
 			<< canWebBuy << "\t"
 			<< buttonTextInfo << "\t"
 			;
-
 		return osstr.str();
 	}
+
+	std::vector<std::string>& get_train_seat_type_queue()
+	{
+		if (train_seat_type_queue.size() == 0)
+		{
+			init_train_seat_queue();
+		}
+		
+		return train_seat_type_queue;
+	}
+	bool train_exitst_ticket()
+	{
+		if (train_seat_type_queue.size() == 0)
+		{
+			init_train_seat_queue();
+		}
+		return exist_tickets;
+	}
+
+	std::string get_seat_num(const std::string& seat_type)
+	{
+		if (seat_type == "SWZ")
+		{
+			return swz_num;
+		}
+		else if (seat_type == "TZ")
+		{
+			return tz_num;
+		}
+		else if (seat_type == "ZY")
+		{
+			return zy_num;
+		}
+		else if (seat_type == "ZE")
+		{
+			return ze_num;
+		}
+		else if (seat_type == "GR")
+		{
+			return gr_num;
+		}
+		else if (seat_type == "RW")
+		{
+			return rw_num;
+		}
+		else if (seat_type == "YW")
+		{
+			return yw_num;
+		}
+		else if (seat_type == "RZ")
+		{
+			return rz_num;
+		}
+		else if (seat_type == "YZ")
+		{
+			return yz_num;
+		}
+		else if (seat_type == "WZ")
+		{
+			return wz_num;
+		}
+
+		return "--";
+	}
+private:
+	void init_train_seat_queue()
+	{
+		train_seat_type_queue.clear();
+
+		if (swz_num != "--")
+		{
+			train_seat_type_queue.push_back("SWZ");
+			if (swz_num != "无") exist_tickets = true;
+		}
+		if (tz_num != "--")
+		{
+			train_seat_type_queue.push_back("TZ");
+			if (tz_num != "无") exist_tickets = true;
+		}
+		if (zy_num != "--")
+		{
+			train_seat_type_queue.push_back("ZY");
+			if (zy_num != "无") exist_tickets = true;
+		}
+		if (ze_num != "--")
+		{
+			train_seat_type_queue.push_back("ZE");
+			if (ze_num != "无") exist_tickets = true;
+		}
+		if (gr_num != "--")
+		{
+			train_seat_type_queue.push_back("GR");
+			if (gr_num != "无") exist_tickets = true;
+		}
+		if (rw_num != "--")
+		{
+			train_seat_type_queue.push_back("RW");
+			if (rw_num != "无") exist_tickets = true;
+		}
+		if (yw_num != "--")
+		{
+			train_seat_type_queue.push_back("YW");
+			if (yw_num != "无") exist_tickets = true;
+		}
+		if (rz_num != "--")
+		{
+			train_seat_type_queue.push_back("RZ");
+			if (rz_num != "无") exist_tickets = true;
+		}
+		if (yz_num != "--")
+		{
+			train_seat_type_queue.push_back("YZ");
+			if (yz_num != "无") exist_tickets = true;
+		}
+		if (wz_num != "--")
+		{
+			train_seat_type_queue.push_back("WZ");
+			if (wz_num != "无") exist_tickets = true;
+		}
+	}
+
+	std::vector<std::string> train_seat_type_queue;
+	bool exist_tickets;
+};
+
+class ticket_price
+{
+public:
+	std::string train_no;
+	std::string yz_price;
+	std::string rz_price;
+	std::string yw_price;
+	std::string rw_price;
+	std::string gr_price;
+	std::string zy_price;
+	std::string ze_price;
+	std::string tz_price;
+	std::string gg_price;
+	std::string yb_price;
+	std::string wz_price;
+	std::string qt_price;
+	std::string swz_price;
+
+	std::string get_ticket_seat_price(const std::string& seat_type)
+	{
+		if (seat_type == "SWZ")
+		{
+			return swz_price;
+		}
+		else if (seat_type == "TZ")
+		{
+			return tz_price;
+		}
+		else if (seat_type == "ZY")
+		{
+			return zy_price;
+		}
+		else if (seat_type == "ZE")
+		{
+			return ze_price;
+		}
+		else if (seat_type == "GR")
+		{
+			return gr_price;
+		}
+		else if (seat_type == "RW")
+		{
+			return rw_price;
+		}
+		else if (seat_type == "YW")
+		{
+			return yw_price;
+		}
+		else if (seat_type == "RZ")
+		{
+			return rz_price;
+		}
+		else if (seat_type == "YZ")
+		{
+			return yz_price;
+		}
+		else if (seat_type == "WZ")
+		{
+			return wz_price;
+		}
+
+		return "";
+	}
+
 };
 
 #endif

@@ -68,9 +68,13 @@ HBRUSH CStopStationDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CStopStationDlg::OnInitGridCtrl()
 {
 //	int nCol = 16;
+	m_Grid.SetTrackFocusCell(FALSE);
+	m_Grid.SetFrameFocusCell(FALSE);
+
+	m_Grid.SetGridBkColor(RGB(255,255,255));
 	m_Grid.SetFixedColumnSelection(TRUE);
 	m_Grid.EnableSelection(FALSE);
-	m_Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr(RGB(0xFF, 0xFF, 0xE0));
+	m_Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr(RGB(222,232,241));
 	m_Grid.SetRowCount(1);
 	m_Grid.SetColumnCount(5);
 	m_Grid.SetFixedRowCount(1);
@@ -135,7 +139,7 @@ void CStopStationDlg::OnInitGridCtrl()
 	{
 		int irow = idx + 1;
 		m_Grid.InsertRow(_T(""));
-		//m_Grid.SetRowHeight(irow, 38);
+		m_Grid.SetRowHeight(irow, 30);
 		for (int icol = 0; icol < 5; ++icol)
 		{
 			CString str;
@@ -183,7 +187,7 @@ void CStopStationDlg::OnInitGridCtrl()
 	}
 
 // #if !defined(_WIN32_WCE) || (_WIN32_WCE < 211)
-// m_Grid.AutoSize();
+// 	m_Grid.AutoSize(GVS_DEFAULT);
 // #endif
 
 	UpdateData(FALSE);

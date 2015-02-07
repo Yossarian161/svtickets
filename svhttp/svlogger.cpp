@@ -1,7 +1,6 @@
 #include "svlogger.h"
 #include <iostream>
 
-#include <time.h>
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -103,56 +102,9 @@ namespace svlogger
 		std::cout.flush();
 	}
 
-	std::string get_now_time(int time_type /*= 0*/)
-	{
-		struct tm tmp;    
-		time_t timep;
-		time(&timep);
-
-#if _MSC_VER >= 1400
-		localtime_s(&tmp,&timep);
-#else
-		tmp = *(localtime(&timep));
-#endif
-
-		char time[64] = {0};
-
-#if _MSC_VER >= 1400
-		if (time_type == 1)
-		{
-			sprintf_s(time, "%02d:%02d:%02d", tmp.tm_hour,tmp.tm_min, tmp.tm_sec);
-		}
-		else if (time_type == 2)
-		{
-			sprintf_s(time, "%d-%02d-%02d", tmp.tm_year + 1900,tmp.tm_mon + 1,tmp.tm_mday);
-		}
-		else
-		{
-			sprintf_s(time, "%d-%02d-%02d %02d:%02d:%02d", tmp.tm_year + 1900,tmp.tm_mon + 1,
-				tmp.tm_mday, tmp.tm_hour,tmp.tm_min, tmp.tm_sec);
-		}
-#else
-		if (time_type == 1)
-		{
-			sprintf(time, "%02d:%02d:%02d", tmp.tm_hour,tmp.tm_min, tmp.tm_sec);
-		}
-		else if (time_type == 2)
-		{
-			sprintf(time, "%d-%02d-%02d", tmp.tm_year + 1900,tmp.tm_mon + 1,tmp.tm_mday);
-		}
-		else
-		{
-			sprintf(time, "%d-%02d-%02d %02d:%02d:%02d", tmp.tm_year + 1900,tmp.tm_mon + 1,
-				tmp.tm_mday, tmp.tm_hour,tmp.tm_min, tmp.tm_sec);
-		}
-#endif
-
-		return std::string(time);
-	}
-
 	void logger_writer( std::string& level, std::string& message, bool disable_cout /*= false*/ )
 	{
-		std::string prefix = get_now_time() + std::string("[") + level + std::string("]: ");
+		std::string prefix = svhttp::get_now_time() + std::string("[") + level + std::string("]: ");
 		std::string tmp = message + "\n";
 		std::string whole = prefix + tmp;
 		
