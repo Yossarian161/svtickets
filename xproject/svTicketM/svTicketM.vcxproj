@@ -134,6 +134,7 @@
     <ClInclude Include="GridCtrl_src\MemDC.h" />
     <ClInclude Include="GridCtrl_src\TitleTip.h" />
     <ClInclude Include="LoginDlg.h" />
+    <ClInclude Include="NewCellTypes\GridCellCombo.h" />
     <ClInclude Include="NewCellTypes\GridURLCell.h" />
     <ClInclude Include="PassengerDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="GridCtrl_src\InPlaceEdit.cpp" />
     <ClCompile Include="GridCtrl_src\TitleTip.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
+    <ClCompile Include="NewCellTypes\GridCellCombo.cpp" />
     <ClCompile Include="NewCellTypes\GridURLCell.cpp" />
     <ClCompile Include="PassengerDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

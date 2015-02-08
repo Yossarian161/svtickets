@@ -10,6 +10,9 @@
 #include "LoginDlg.h"
 #include "PassengerDlg.h"
 
+#include "ximage.hpp"
+#include "xdecaptcha.h"
+
 ticket_manage gl_manage;
 
 #ifdef _DEBUG
@@ -78,6 +81,7 @@ BEGIN_MESSAGE_MAP(CsvTicketMDlg, CDialogEx)
 	ON_MESSAGE(WM_GRID_CELL_CLICK, &CsvTicketMDlg::OnGridCellClick)
 	ON_WM_TIMER()
 	ON_STN_CLICKED(IDC_BTN_SELECT, &CsvTicketMDlg::OnStnClickedBtnSelect)
+	ON_BN_CLICKED(IDC_BTN_SUBMIT_ORDER, &CsvTicketMDlg::OnBnClickedBtnSubmitOrder)
 END_MESSAGE_MAP()
 
 
@@ -113,6 +117,9 @@ BOOL CsvTicketMDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	// 开启程序运行日志
+	SVLOGGER_INIT_PATH("./data/svticket.log");
+	// 获取ip地址
 	ip138 _ip_138;
 	CString ip_msg;
 	ip_msg.Format(_T("%s"), win32_A2U(_ip_138.get_reponse_str().c_str()));
@@ -131,6 +138,10 @@ BOOL CsvTicketMDlg::OnInitDialog()
 	}
 	
 	OnInitControl();
+
+	// test data
+	SetDlgItemText(IDC_FROM_STATION_NAME, _T("吉安"));
+	SetDlgItemText(IDC_TO_STATION_NAME, _T("深圳"));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -220,6 +231,8 @@ void CsvTicketMDlg::OnInitControl()
 	m_checkorder_dlg->Create(IDD_CHECK_ORDER_DLG);
 	m_checkorder_dlg->SetParent(this);
 	m_checkorder_dlg->ShowWindow(SW_HIDE);
+
+	GetDlgItem(IDC_BTN_SUBMIT_ORDER)->ShowWindow(SW_HIDE);
 }
 
 void CsvTicketMDlg::OnInitGridCtrl()
@@ -321,6 +334,8 @@ void CsvTicketMDlg::OnInitGridCtrl()
 
 void CsvTicketMDlg::OnBnClickedBtnQuery()
 {
+	CString fstation_name, tstation_name;
+	bool m_bret = false;
 	ShowCheckOrderDialog(false);
 	
 	if (m_from_station.GetItemValue().IsEmpty() || m_to_station.GetItemValue().IsEmpty())
@@ -337,34 +352,44 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 	// 清空grid历史数据
 	m_Grid.DeleteNonFixedRows();
 
-	//AfxMessageBox(m_from_station.GetItemValue());
-	left_ticket_dto ticket_dto;
-#if _UNICODE
-	ticket_dto.set_from_station(win32_utils::UnicodeToAnsi(m_from_station.GetItemValue().GetBuffer(0)));
-	ticket_dto.set_to_station(win32_utils::UnicodeToAnsi(m_to_station.GetItemValue().GetBuffer(0)));
-	ticket_dto.set_train_date(win32_utils::UnicodeToAnsi(stime.GetBuffer(0)));
-#else
-	ticket_dto.set_from_station(m_from_station.GetItemValue().GetBuffer(0));
-	ticket_dto.set_to_station(m_to_station.GetItemValue().GetBuffer(0));
-	ticket_dto.set_train_date(stime.GetBuffer(0));
-#endif
+	GetDlgItemText(IDC_FROM_STATION_NAME, fstation_name);
+	GetDlgItemText(IDC_TO_STATION_NAME, tstation_name);
+	m_ticket_dto.set_from_station(win32_U2A(m_from_station.GetItemValue().GetBuffer(0)));
+	m_ticket_dto.set_from_station_name(win32_U2A(fstation_name.GetBuffer(0)));
+	m_ticket_dto.set_to_station(win32_U2A(m_to_station.GetItemValue().GetBuffer(0)));
+	m_ticket_dto.set_to_station_name(win32_U2A(tstation_name.GetBuffer(0)));
+	m_ticket_dto.set_train_date(win32_U2A(stime.GetBuffer(0)));
+
 
 	if (BST_CHECKED==((CButton*)GetDlgItem(IDC_CHECK_STUDENT))->GetCheck())
 	{
-		ticket_dto.set_purpose_codes(true);
+		m_ticket_dto.set_purpose_codes(true);
 	}
 	else
-		ticket_dto.set_purpose_codes();
+		m_ticket_dto.set_purpose_codes();
 	
+	CString log_msg;
+	log_msg.Format(_T("正在查询(%s, %s->%s)，请等待..."), win32_A2U(m_ticket_dto.get_train_date().c_str()),
+		win32_A2U(m_ticket_dto.get_from_station_name().c_str()), win32_A2U(m_ticket_dto.get_to_station_name().c_str()));
+	svTicketRunLogPush(log_msg);
+
 	if (!m_surplus_query)
 	{
-		gl_manage.query_train_data(ticket_dto);
+		m_bret = gl_manage.query_train_data(m_ticket_dto);
 	}
 	else
 	{
-		gl_manage.query_train_data_surplus(ticket_dto);
+		m_bret = gl_manage.query_train_data_surplus(m_ticket_dto);
 	}
 	
+	if (!m_bret)
+	{
+		log_msg.Format(_T("未查询到满足您查询设置中需求的车次或席位"));
+		svTicketRunLogPush(log_msg);
+		//svTicketRunLogPush(win32_A2U(gl_manage.get_error_buffer().c_str()));
+		return ;
+	}
+
 	std::vector<train_data> data_list = m_surplus_query?
 		gl_manage.get_train_data_surplus_list()
 		:gl_manage.get_train_data_list();
@@ -557,7 +582,7 @@ BOOL CsvTicketMDlg::PreTranslateMessage(MSG* pMsg)
 	{
 		return TRUE;
 	}
-
+	
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
@@ -582,6 +607,7 @@ bool CsvTicketMDlg::OnInitLogin()
 		CString msg;
 		msg.Format(_T("用户：[%s] 成功登录。"), username);
 		svTicketRunLogPush(msg);
+
 		return true;
 	}
 	
@@ -590,11 +616,10 @@ bool CsvTicketMDlg::OnInitLogin()
 
 void CsvTicketMDlg::OnStnClickedBtnSelect()
 {
-	m_passenger_list.DeleteAllItems();
-
 	CPassengerDlg passenger_dlg;
 	if (passenger_dlg.DoModal() == IDOK)
 	{
+		m_passenger_list.DeleteAllItems();
 		std::vector<passenger_datum> passenger_list = gl_manage.get_passengers().get_passenger_datum_list();
 
 		std::vector<passenger_datum>::iterator iter = passenger_list.begin();
@@ -606,24 +631,16 @@ void CsvTicketMDlg::OnStnClickedBtnSelect()
 			int col = m_passenger_list.InsertItem(i, win32_A2U(passenger.get_passenger_name().c_str()));
 			m_passenger_list.SetItemText(col, 1, win32_A2U(passenger.get_passenger_id_no().c_str()));
 			
-			//m_passenger_list.SetItemText(col, 2, win32_A2U(passenger.get_seat_type().c_str()));
-			if (passenger.get_seat_type() == "YZ")
-			{
-				m_passenger_list.SetItemText(col, 2, _T("硬座"));
-			}
-			else
-			{
-				m_passenger_list.SetItemText(col, 2, _T("默认"));
-			}
-
-			if (passenger.get_ticket_type() == "1")
-			{
-				m_passenger_list.SetItemText(col, 3, _T("成人"));
-			}
-			else if (passenger.get_ticket_type() == "2")
-			{
-				m_passenger_list.SetItemText(col, 3, _T("儿童"));
-			}
+			m_passenger_list.SetItemText(col, 2, win32_A2U(passenger.get_seat_type_name().c_str()));
+			m_passenger_list.SetItemText(col, 3, win32_A2U(passenger.get_ticket_type_name().c_str()));
+// 			if (passenger.get_ticket_type_name() == "1")
+// 			{
+// 				m_passenger_list.SetItemText(col, 3, _T("成人"));
+// 			}
+// 			else if (passenger.get_ticket_type() == "2")
+// 			{
+// 				m_passenger_list.SetItemText(col, 3, _T("儿童"));
+// 			}
 		}
 
 		// 同时更新check_order 中的乘客列表
@@ -638,10 +655,26 @@ void CsvTicketMDlg::OnClickedSubmitOrder( int wp, int lp )
 {
 	ShowCheckOrderDialog();
 
-	m_checkorder_dlg->m_train_info = gl_manage.get_train_data_surplus_list()[wp-1];
+	CString log_msg;
+	while (!gl_manage.query_train_data(m_ticket_dto))
+	{
+		svTicketRunLogPush(_T("预定车票查询..."));
+		Sleep(1000);
+	}
+
+	m_checkorder_dlg->m_train_info = gl_manage.get_train_data_list()[wp-1];
+//	m_checkorder_dlg->m_train_info = (/*train_data_vec.size() == 0 || */gl_manage.get_train_data_list().size() <= (unsigned)wp) ?
+//		gl_manage.get_train_data_surplus_list()[wp-1]:gl_manage.get_train_data_list()[wp-1];
+
 	m_checkorder_dlg->updateTrainInfo();
 
 	UpdateData(FALSE);
+
+	if (!gl_manage.submit_order_request(m_checkorder_dlg->m_train_info))
+	{
+		svTicketRunLogPush(win32_A2U(gl_manage.get_error_buffer().c_str()));
+	}
+	;
 }
 
 void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
@@ -672,6 +705,8 @@ void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
 			m_checkorder_dlg->MoveWindow(orect);
 
 			m_checkorder_dlg->ShowWindow(SW_SHOW);
+
+			GetDlgItem(IDC_BTN_SUBMIT_ORDER)->ShowWindow(SW_SHOW);
 		}
 	}
 	else
@@ -688,6 +723,8 @@ void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
 
 			GetDlgItem(IDC_GRID)->MoveWindow(mrect);
 			m_checkorder_dlg->ShowWindow(SW_HIDE);
+
+			GetDlgItem(IDC_BTN_SUBMIT_ORDER)->ShowWindow(SW_HIDE);
 		}
 	}
 
@@ -697,15 +734,38 @@ void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
 
 void CsvTicketMDlg::svTicketRunLogPush( CString str_msg )
 {
-	UpdateData(TRUE);
 	CString pre_str;
-	GetDlgItemText(IDC_EDIT_RUNLOG, pre_str);
-	
 	pre_str += win32_A2U(svhttp::get_now_time(3).c_str());
 	pre_str += _T("  ");
 	pre_str += str_msg;
-	pre_str += _T("\n");
-	SetDlgItemText(IDC_EDIT_RUNLOG, pre_str);
+	pre_str += _T("\r\n");
+
+	CRichEditCtrl *m_richedit_runlog = (CRichEditCtrl *)GetDlgItem(IDC_EDIT_RUNLOG);
+	m_richedit_runlog->SetSel(-1,-1);
+	m_richedit_runlog->ReplaceSel(pre_str);
+	// 日志信息滚到最后一行。
+	m_richedit_runlog->PostMessage(WM_VSCROLL, SB_BOTTOM, 0);
+
 	UpdateData(FALSE);
 }
 
+// 提交订单
+void CsvTicketMDlg::OnBnClickedBtnSubmitOrder()
+{
+	CString log_msg;
+	// todo: 更新乘客席位信息
+
+	// 开始提交。
+	// 验证码自动识别
+	std::string pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
+
+	while (!gl_manage.passenger_passcode_verify(pass_str))
+	{
+		log_msg.Format(_T("验证码：%s 识别错误."), win32_A2U(pass_str.c_str()));
+		svTicketRunLogPush(log_msg);
+		gl_manage.passenger_passcode_reflush();
+		pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
+	}
+	log_msg.Format(_T("验证码：%s 识别成功."), win32_A2U(pass_str.c_str()));
+	svTicketRunLogPush(log_msg);
+}

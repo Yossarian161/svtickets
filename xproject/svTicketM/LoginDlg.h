@@ -27,4 +27,5 @@ public:
 	afx_msg void OnStnClickedStaticPasscode();
 
 	std::string decaptchaImage(const std::string& image_path);
+	bool m_auto_login;
 };

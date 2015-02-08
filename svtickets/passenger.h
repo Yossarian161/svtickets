@@ -54,7 +54,7 @@ public:
 class passenger_datum
 {
 public:
-	void set_passenger_datum(contacts_datum& contacts, const std::string& ttype = "0" ,const std::string& stype = "YZ");
+	void set_passenger_datum(contacts_datum& contacts, const std::string& ttype = "0" ,const std::string& stype = "default");
 
 	void set_passenger_name(const std::string& pname);
 	void set_passenger_id_type(const std::string& ptype);

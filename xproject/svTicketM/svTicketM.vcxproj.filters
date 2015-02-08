@@ -135,6 +135,9 @@
     <ClInclude Include="..\..\svhttp\http_client.h">
       <Filter>svhttp</Filter>
     </ClInclude>
+    <ClInclude Include="NewCellTypes\GridCellCombo.h">
+      <Filter>ctrl-ext\grid_ext</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="svTicketM.cpp">
@@ -211,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="..\..\svtickets\dynamic_encrypt.cpp">
       <Filter>svtickets</Filter>
+    </ClCompile>
+    <ClCompile Include="NewCellTypes\GridCellCombo.cpp">
+      <Filter>ctrl-ext\grid_ext</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

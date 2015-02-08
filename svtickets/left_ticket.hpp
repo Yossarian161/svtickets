@@ -8,7 +8,9 @@ class left_ticket_dto
 {
 public:
 	inline void set_from_station(std::string sfrom){ form_station = sfrom; }
+	void set_from_station_name(std::string sfrom_name) { from_station_name = sfrom_name; }
 	inline void set_to_station(std::string sto) { to_station = sto; }
+	void set_to_station_name(std::string sto_name) { to_station_name = sto_name; }
 	inline void set_train_date(std::string tdate) { train_date = tdate; }
 	inline void set_purpose_codes(bool sf2 = false) { 
 		if (sf2)  // 学生票
@@ -24,6 +26,8 @@ public:
 	// 车票日期
 	inline std::string get_train_date(){ return train_date; }
 	inline std::string get_purpose_codes() { return purpose_codes; }
+	std::string get_from_station_name() { return from_station_name; }
+	std::string get_to_station_name() { return to_station_name; }
 	// 构造查询字符串
 	inline std::string get_query_string()
 	{
@@ -50,7 +54,9 @@ public:
 	left_ticket_dto():purpose_codes("ADULT"){};
 private:
 	std::string form_station;
+	std::string from_station_name;
 	std::string to_station;
+	std::string to_station_name;
 	std::string train_date;
 	std::string purpose_codes;
 };

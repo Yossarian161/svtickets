@@ -17,7 +17,7 @@ IMPLEMENT_DYNAMIC(CLoginDlg, CDialogEx)
 CLoginDlg::CLoginDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLoginDlg::IDD, pParent)
 {
-
+	m_auto_login = true;
 }
 
 CLoginDlg::~CLoginDlg()
@@ -77,13 +77,18 @@ void CLoginDlg::OnBnClickedBtn01()
 	GetDlgItemText(IDC_EDIT_PASSCODE, spasscode);
 	GetDlgItemText(IDC_EDIT_USERNAME, susername);
 	GetDlgItemText(IDC_EDIT_PASSWORD, spassword);
-	if (!gl_manage.login_passcode_verify(win32_U2A(spasscode.GetBuffer(0))))
+
+	if (m_auto_login)
 	{
-		AfxMessageBox(win32_A2U((gl_manage.get_error_buffer()).c_str()));
-	}
-	else
-	{
-		//AfxMessageBox("验证码正确");
+		std::string pass_str = win32_U2A(spasscode.GetBuffer(0));
+		while (!gl_manage.login_passcode_verify(pass_str))
+		{
+			gl_manage.login_passcode_reflush();
+			pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
+			SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
+			UpdateData(FALSE);
+		}
+
 		if (!gl_manage.login_verify(win32_U2A(susername.GetBuffer(0)), win32_U2A(spassword.GetBuffer(0)), win32_U2A(spasscode.GetBuffer(0))))
 		{
 			AfxMessageBox(win32_A2U((gl_manage.get_error_buffer()).c_str()));
@@ -96,6 +101,30 @@ void CLoginDlg::OnBnClickedBtn01()
 		{
 			//登录成功
 			OnOK();
+		}
+	}
+	else
+	{
+		if (!gl_manage.login_passcode_verify(win32_U2A(spasscode.GetBuffer(0))))
+		{
+			AfxMessageBox(win32_A2U((gl_manage.get_error_buffer()).c_str()));
+		}
+		else
+		{
+			//AfxMessageBox("验证码正确");
+			if (!gl_manage.login_verify(win32_U2A(susername.GetBuffer(0)), win32_U2A(spassword.GetBuffer(0)), win32_U2A(spasscode.GetBuffer(0))))
+			{
+				AfxMessageBox(win32_A2U((gl_manage.get_error_buffer()).c_str()));
+
+				gl_manage.login_init();
+				std::string pass_str = decaptchaImage("./data/pass.png");
+				SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
+			}
+			else
+			{
+				//登录成功
+				OnOK();
+			}
 		}
 	}
 }

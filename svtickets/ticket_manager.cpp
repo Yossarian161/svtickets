@@ -1100,6 +1100,15 @@ bool ticket_manage::submit_order_request( train_data& _train_data )
 	/**
 	 *	initDc
 	 */
+	if (!confirm_passenger_initdc())
+	{
+		return false;
+	}
+	// 更新验证码
+	if (!passenger_passcode_reflush())
+	{
+		return false;
+	}
 
 	return true;
 }

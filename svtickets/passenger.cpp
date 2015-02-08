@@ -401,6 +401,12 @@ std::string seats_type::get_seat_info_from_type( const std::string& seat_type, i
 		seat_code = "WZ";
 		seat_name = "无座";
 	}
+	// 本地程序新增缺省值
+	else if (seat_type == "default")
+	{
+		seat_code = "default";
+		seat_name = "默认";
+	}
 
 	if (ret_code == 1)
 	{

@@ -30,6 +30,9 @@ public:
 	void updatePassengerInfo();
 
 	train_data m_train_info;
+	// combox 下拉列表。。
+	CStringArray m_seat_array;
+	CStringArray m_ticket_array;
 
 	bool is_num(std::string str);
 };

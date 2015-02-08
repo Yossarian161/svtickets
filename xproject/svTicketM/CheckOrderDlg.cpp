@@ -7,7 +7,7 @@
 #include "afxdialogex.h"
 #include "svTicketMDlg.h"
 
-
+#include "NewCellTypes/GridCellCombo.h"
 // CCheckOrderDlg 对话框
 
 IMPLEMENT_DYNAMIC(CCheckOrderDlg, CDialogEx)
@@ -41,6 +41,13 @@ BOOL CCheckOrderDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	OnInitGrid();
+
+	// seat_type combox array.
+	m_ticket_array.RemoveAll();
+	m_ticket_array.Add(_T("成人票"));
+	m_ticket_array.Add(_T("儿童票"));
+	m_ticket_array.Add(_T("学生票"));
+	m_ticket_array.Add(_T("残军票"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -160,6 +167,8 @@ void CCheckOrderDlg::updateTrainInfo()
 	CString str;
 	if (!(std::string(m_train_info.train_no)).empty())
 	{
+		m_seat_array.RemoveAll();
+
 		gl_manage.query_ticket_price(m_train_info);
 		ticket_price t_price = gl_manage.get_ticket_price();
 
@@ -174,6 +183,12 @@ void CCheckOrderDlg::updateTrainInfo()
 		{
 			osstr << seats_type::get_seat_type_name(*iter) << "(￥" << t_price.get_ticket_seat_price(*iter)
 				<< ")" << m_train_info.get_seat_num(*iter) << (is_num(m_train_info.get_seat_num(*iter))?"张":"票") <<"  ";
+		
+			// 席位combox备选值
+			if (*iter != "WZ")
+			{
+				m_seat_array.InsertAt(0,win32_A2U(seats_type::get_seat_type_name(*iter).c_str()));
+			}
 		}
 
 		str = win32_A2U(osstr.str().c_str());
@@ -182,7 +197,7 @@ void CCheckOrderDlg::updateTrainInfo()
 	
 	//////////////////////////////////////////////////////////////////////////
 	// 显示订票乘客 席位等信息
-	// updatePassengerInfo();
+	updatePassengerInfo();
 	UpdateData(FALSE);
 }
 
@@ -213,9 +228,26 @@ void CCheckOrderDlg::updatePassengerInfo()
 				break;
 			case 1:
 				str = win32_A2U(passenger_list[idx].get_ticket_type_name().c_str());
+				m_Grid.SetCellType(irow,icol, RUNTIME_CLASS(CGridCellCombo));
 				break;
 			case 2:
-				str = win32_A2U(passenger_list[idx].get_seat_type_name().c_str());
+				if (passenger_list[idx].get_seat_type() == "default")
+				{
+					// todo: 根据优先级选择。 现在尚未设置优先级，先直接试用默认值
+					if (m_seat_array.GetSize() != 0)
+					{
+						str = m_seat_array.GetAt(0);
+					}
+					else
+					{
+						str = _T("");
+					}
+				}
+				else
+				{
+					str = win32_A2U(passenger_list[idx].get_seat_type_name().c_str());
+				}
+				m_Grid.SetCellType(irow,icol, RUNTIME_CLASS(CGridCellCombo));
 				break;
 			case 3:
 				str = win32_A2U(passenger_list[idx].get_passenger_name().c_str());
@@ -237,7 +269,29 @@ void CCheckOrderDlg::updatePassengerInfo()
 
 			m_Grid.SetItem(&Item);
 
-			m_Grid.SetItemState(irow, icol, m_Grid.GetItemState(irow, icol) | GVIS_READONLY);
+			// 票种、席位 俩列设置为可写，其余列暂设置为只读
+			if (icol == 1 || icol == 2)
+			{	
+				m_Grid.SetItemState(irow, icol, m_Grid.GetItemState(irow, icol));
+				if (icol == 1)
+				{
+					//
+					CGridCellCombo *pCell = (CGridCellCombo*) m_Grid.GetCell(irow,icol);
+					pCell->SetOptions(m_ticket_array);
+					pCell->SetStyle(CBS_DROPDOWNLIST);
+				}
+				else
+				{
+					CGridCellCombo *pCell = (CGridCellCombo*) m_Grid.GetCell(irow,icol);
+					pCell->SetOptions(m_seat_array);
+					pCell->SetStyle(CBS_DROPDOWNLIST); //CBS_DROPDOWN, CBS_DROPDOWNLIST, CBS_SIMPLE
+				}
+			}
+			else
+			{
+				m_Grid.SetItemState(irow, icol, m_Grid.GetItemState(irow, icol) | GVIS_READONLY);
+			}
+			
 			m_Grid.SetItemFormat(irow,icol, DT_VCENTER|DT_CENTER|DT_SINGLELINE|DT_NOPREFIX);
 		}
 	}

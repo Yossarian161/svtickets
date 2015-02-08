@@ -9,7 +9,6 @@
 #include "svticket.h"
 #include "GridCtrl_src/GridCtrl.h"
 #include "autoComplete/StationEdit.h"
-#include "afxcmn.h"
 
 #include "CheckOrderDlg.h"
 
@@ -66,7 +65,10 @@ public:
 	CStationEdit m_to_station;
 	CDateTimeCtrl m_train_date;
 
+	left_ticket_dto m_ticket_dto;
+
 	CListCtrl m_passenger_list;
 
 	CCheckOrderDlg* m_checkorder_dlg;
+	afx_msg void OnBnClickedBtnSubmitOrder();
 };
