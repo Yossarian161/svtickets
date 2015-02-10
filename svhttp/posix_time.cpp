@@ -78,14 +78,78 @@ std::string date_time::to_time_string(bool msec /*= false*/)
 	return std::string(time_str);
 }
 
+/**
+ *	set operator
+ */
+void date_time::set_year(const unsigned int& val)
+{
+	nyear = val;
+}
+void date_time::set_month(const unsigned int& val)
+{
+	nmonth = val;
+}
+void date_time::set_day(const unsigned int& val)
+{
+	nday = val;
+}
+void date_time::set_hour(const unsigned int& val)
+{
+	nhour = val;
+}
+void date_time::set_minuter(const unsigned int& val)
+{
+	nminuter = val;
+}
+void date_time::set_seconds(const unsigned int& val)
+{
+	nseconds = val;
+}
+void date_time::set_milli_seconds(const unsigned int& val)
+{
+	nmilliseconds = val;
+}
+
+/**
+ *	get operator
+ */
+unsigned int date_time::get_year()
+{
+	return nyear;
+}
+unsigned int date_time::get_month()
+{
+	return nmonth;
+}
+unsigned int date_time::get_day()
+{
+	return nday;
+}
+unsigned int date_time::get_hour()
+{
+	return nhour;
+}
+unsigned int date_time::get_minuter()
+{
+	return nminuter;
+}
+unsigned int date_time::get_seconds()
+{
+	return nseconds;
+}
+unsigned int date_time::get_milli_seconds()
+{
+	return nmilliseconds;
+}
+
 // 获取date_time日期对应的星期x <nweekday: days since Sunday - [0,6] >
-std::string date_time::get_week_day()
+std::string date_time::get_week_day_abbr()
 {
 	const std::string weeks[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 	return weeks[nweekday];
 }
 // 获取date_time日期对应的月份 英文缩写
-std::string date_time::get_month()
+std::string date_time::get_month_abbr()
 {
 	const std::string months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 	return months[nmonth-1];
