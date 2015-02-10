@@ -1058,7 +1058,7 @@ bool ticket_manage::submit_order_request( train_data& _train_data )
 	osstr << _client.str_escape(dynamic_key) << "=" << _client.str_escape(dynamic_value)
 		<< "&myversion=undefined&secretStr=" << _train_data.secretStr
 		<< "&train_date=" << _train_data.train_date
-		<< "&back_train_date=" << svhttp::get_now_time(2)
+		<< "&back_train_date=" << svhttp::date_time().to_date_string()
 		<< "&tour_flag=dc&purpose_codes=" << _train_data.purpose_codes
 		<< "&query_from_station_name=" << _train_data.from_station_name
 		<< "&query_to_station_name=" << _train_data.to_station_name

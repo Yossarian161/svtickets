@@ -110,6 +110,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\svhttp\bencode.h" />
     <ClInclude Include="..\..\svhttp\http_client.h" />
+    <ClInclude Include="..\..\svhttp\posix_time.h" />
     <ClInclude Include="..\..\svhttp\svhttp.h" />
     <ClInclude Include="..\..\svhttp\svlogger.h" />
     <ClInclude Include="..\..\svtickets\dynamic_encrypt.hpp" />
@@ -149,6 +150,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\svhttp\http_client.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\svhttp\posix_time.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\svhttp\svlogger.cpp">

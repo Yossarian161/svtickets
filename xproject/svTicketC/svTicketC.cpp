@@ -63,7 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//
 	//_manage.query_passengers();
 
-	SVLOGGER_ERR << svhttp::get_now_time(3);
+	SVLOGGER_ERR << svhttp::date_time().to_time_string(true);
 	
 	//_manage.confirm_passenger_initdc();
 #endif

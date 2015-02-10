@@ -138,6 +138,9 @@
     <ClInclude Include="NewCellTypes\GridCellCombo.h">
       <Filter>ctrl-ext\grid_ext</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\svhttp\posix_time.h">
+      <Filter>svhttp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="svTicketM.cpp">
@@ -217,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="NewCellTypes\GridCellCombo.cpp">
       <Filter>ctrl-ext\grid_ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\svhttp\posix_time.cpp">
+      <Filter>svhttp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

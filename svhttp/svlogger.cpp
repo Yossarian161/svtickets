@@ -104,7 +104,7 @@ namespace svlogger
 
 	void logger_writer( std::string& level, std::string& message, bool disable_cout /*= false*/ )
 	{
-		std::string prefix = svhttp::get_now_time() + std::string("[") + level + std::string("]: ");
+		std::string prefix = svhttp::date_time().to_string() + std::string("[") + level + std::string("]: ");
 		std::string tmp = message + "\n";
 		std::string whole = prefix + tmp;
 		

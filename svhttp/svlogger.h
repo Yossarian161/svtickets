@@ -3,7 +3,7 @@
 
 #include <string>
 #include <sstream>
-#include "posix_time.hpp"
+#include "posix_time.h"
 
 namespace svlogger
 {

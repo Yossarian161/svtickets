@@ -78,16 +78,16 @@ void CLoginDlg::OnBnClickedBtn01()
 	GetDlgItemText(IDC_EDIT_USERNAME, susername);
 	GetDlgItemText(IDC_EDIT_PASSWORD, spassword);
 
-	if (m_auto_login)
+	if (false/*m_auto_login*/)
 	{
-		std::string pass_str = win32_U2A(spasscode.GetBuffer(0));
-		while (!gl_manage.login_passcode_verify(pass_str))
-		{
-			gl_manage.login_passcode_reflush();
-			pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
-			SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
-			UpdateData(FALSE);
-		}
+// 		std::string pass_str = win32_U2A(spasscode.GetBuffer(0));
+// 		while (!gl_manage.login_passcode_verify(pass_str))
+// 		{
+// 			gl_manage.login_passcode_reflush();
+// 			pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
+// 			SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
+// 			UpdateData(FALSE);
+// 		}
 
 		if (!gl_manage.login_verify(win32_U2A(susername.GetBuffer(0)), win32_U2A(spassword.GetBuffer(0)), win32_U2A(spasscode.GetBuffer(0))))
 		{
@@ -139,6 +139,13 @@ void CLoginDlg::OnStnClickedStaticPasscode()
 	gl_manage.login_passcode_reflush();
 	//Sleep(500);
 	std::string pass_str = decaptchaImage("./data/pass.png");
+
+	while (!gl_manage.login_passcode_verify(pass_str))
+	{
+		gl_manage.login_passcode_reflush();
+		pass_str = decaptchaImage("./data/pass.png");
+	}
+
 	SetDlgItemText(IDC_EDIT_PASSCODE, win32_A2U(pass_str.c_str()));
 
 	UpdateData(FALSE);

@@ -735,7 +735,7 @@ void CsvTicketMDlg::ShowCheckOrderDialog( bool bshow /*= true*/ )
 void CsvTicketMDlg::svTicketRunLogPush( CString str_msg )
 {
 	CString pre_str;
-	pre_str += win32_A2U(svhttp::get_now_time(3).c_str());
+	pre_str += win32_A2U(svhttp::date_time().to_time_string(true).c_str());
 	pre_str += _T("  ");
 	pre_str += str_msg;
 	pre_str += _T("\r\n");
