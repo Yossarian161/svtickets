@@ -4,7 +4,7 @@
 /**	Copyright (c) 2015-20XX jianyaoy. all rights reserved.
  *	datetime deal class. 
  *	Author: jianyaoy@gmail.com
- *  $Date:	2015-02-11 00:00:00 +0800 $
+ *	$Date:  2015-02-11 00:00:00 +0800 $
  */
 
 #include <string>
@@ -19,29 +19,29 @@ public:
 	date_time();
 	date_time(std::string date_str);
 	date_time(const char* szdate_str);
-	date_time(long sec);	// ÒÔÃëÉèÖÃDate¶ÔÏó <1970Äê1ÔÂ1ÈÕÖÁ½ñµÄÃëÊı>
+	date_time(long sec);	// ä»¥ç§’è®¾ç½®Dateå¯¹è±¡ <1970å¹´1æœˆ1æ—¥è‡³ä»Šçš„ç§’æ•°>
 	// destructor
 	~date_time();
 
-	// locale Ê±¼ä
-	// [yyyy-mm-dd hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+	// locale æ—¶é—´
+	// [yyyy-mm-dd hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 	std::string to_string(bool msec = false);
-	// [yyyy-mm-dd] »ñÈ¡ÈÕÆÚ×Ö·û´®
+	// [yyyy-mm-dd] è·å–æ—¥æœŸå­—ç¬¦ä¸²
 	std::string to_date_string();
-	// [hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+	// [hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 	std::string to_time_string(bool msec = false);
 
-	// utc Ê±¼ä
-	// utcÊ±ÇøÈÕÆÚºÍÊ±¼ä [yyyy-mm-dd hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+	// utc æ—¶é—´
+	// utcæ—¶åŒºæ—¥æœŸå’Œæ—¶é—´ [yyyy-mm-dd hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 	std::string to_utc_string(bool msec = false);
-	// utcÈÕÆÚ [yyyy-mm-dd] »ñÈ¡ÈÕÆÚ×Ö·û´®
+	// utcæ—¥æœŸ [yyyy-mm-dd] è·å–æ—¥æœŸå­—ç¬¦ä¸²
 	std::string to_utc_date_string();
-	// utcÊ±¼ä [hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+	// utcæ—¶é—´ [hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 	std::string to_utc_time_string(bool msec = false);
 
-	// ·µ»Ø1970Äê1ÔÂ1ÈÕÖÁ½ñµÄÃëÊı¡£
+	// è¿”å›1970å¹´1æœˆ1æ—¥è‡³ä»Šçš„ç§’æ•°ã€‚
 	long get_time();
-	// ÖØÖÃµ±Ç°datetimeÖĞµÄºÁÃë <tip: µ±Ç°Ö»ÓĞÔÚwindowsÓĞĞ§>
+	// é‡ç½®å½“å‰datetimeä¸­çš„æ¯«ç§’ <tip: å½“å‰åªæœ‰åœ¨windowsæœ‰æ•ˆ>
 	void reset_milliseconds();
 
 	// set operator
@@ -61,9 +61,9 @@ public:
 	unsigned int get_seconds();
 	unsigned int get_milli_seconds();	
 
-	// »ñÈ¡date_timeÈÕÆÚ¶ÔÓ¦µÄĞÇÆÚx Ó¢ÎÄËõĞ´ <nweekday: days since Sunday - [0,6] >
+	// è·å–date_timeæ—¥æœŸå¯¹åº”çš„æ˜ŸæœŸx è‹±æ–‡ç¼©å†™ <nweekday: days since Sunday - [0,6] >
 	std::string get_week_day_abbr();
-	// »ñÈ¡date_timeÈÕÆÚ¶ÔÓ¦µÄÔÂ·İ Ó¢ÎÄËõĞ´
+	// è·å–date_timeæ—¥æœŸå¯¹åº”çš„æœˆä»½ è‹±æ–‡ç¼©å†™
 	std::string get_month_abbr();
 	// days since January 1 - [0,365]
 	unsigned int get_year_day();
@@ -73,14 +73,14 @@ public:
 	/**
 	 *	static operation
 	 */
-	// ¼ÆËã±È½ÏÁ½¸öÈÕÆÚÏà²îµÄÄê/ÔÂ/ÈÕ <type£º{0: ÈÕ; 1: ÔÂ;  2: Äê}>
+	// è®¡ç®—æ¯”è¾ƒä¸¤ä¸ªæ—¥æœŸç›¸å·®çš„å¹´/æœˆ/æ—¥ <typeï¼š{0: æ—¥; 1: æœˆ;  2: å¹´}>
 	static int get_diff_date( date_time date1, date_time date2,const unsigned int& itype = 0);
-	//  ÈÕÆÚ±È½Ï (return 1:0:-1)
+	//  æ—¥æœŸæ¯”è¾ƒ (return 1:0:-1)
 	static int compare_date(const date_time& date1, const date_time& date2);
 
-	// Ê¹ÓÃ²ÌÀÕ¹«Ê½: ¼ÆËãÖ¸¶¨ÈÕÆÚ¶ÔÓ¦µÄĞÇÆÚx since Sunday - [0,6]
+	// ä½¿ç”¨è”¡å‹’å…¬å¼: è®¡ç®—æŒ‡å®šæ—¥æœŸå¯¹åº”çš„æ˜ŸæœŸx since Sunday - [0,6]
 	static unsigned int get_day_of_week(const unsigned int& iyear, const unsigned int& imonth, const unsigned int& iday );
-	// ¼ÆËãÄ³ÔÂµÄÌìÊı
+	// è®¡ç®—æŸæœˆçš„å¤©æ•°
 	static unsigned int get_day_of_month(const unsigned int& iyear, const unsigned int& imonth);
 	// days since January 1 - [0,365]
 	static unsigned int get_day_of_year(const unsigned int& iyear, const unsigned int& imonth, const unsigned int& iday);
@@ -112,7 +112,7 @@ public:
 		d.add_any_days(-v);
 		return d;
 	}
-	// ¼ÆËãÁ½ÈÕÆÚÖ®²î(·µ»ØÏà²îÌìÊı)
+	// è®¡ç®—ä¸¤æ—¥æœŸä¹‹å·®(è¿”å›ç›¸å·®å¤©æ•°)
 	int operator - (date_time& b)
 	{
 		return get_diff_date(b, *this);
@@ -150,7 +150,7 @@ public:
 	}
 
 	/**
-	 *	ÈÕÆÚ´óĞ¡±È½Ï²Ù×÷·û
+	 *	æ—¥æœŸå¤§å°æ¯”è¾ƒæ“ä½œç¬¦
 	 */
 	bool operator > ( const date_time& b)
 	{
@@ -178,12 +178,12 @@ public:
  	}
 
 private:
-	// ÒªÉèÖÃµÄÈÕÆÚºÍÊ±¼äÓëGMTÊ±¼ä1970Äê1ÔÂ1ÈÕÎçÒ¹Ö®¼äµÄÃëÊı¡£ // utc£º ÊÇ·ñ×ª»»ÎªutcÊ±¼ä
+	// è¦è®¾ç½®çš„æ—¥æœŸå’Œæ—¶é—´ä¸GMTæ—¶é—´1970å¹´1æœˆ1æ—¥åˆå¤œä¹‹é—´çš„ç§’æ•°ã€‚ // utcï¼š æ˜¯å¦è½¬æ¢ä¸ºutcæ—¶é—´
 	void set_time(long sec, bool utc = false);
 
-	// date_time È«¾Ö¸ñÊ½»¯(date_time³õÊ¼»¯)
+	// date_time å…¨å±€æ ¼å¼åŒ–(date_timeåˆå§‹åŒ–)
 	void date_global_format();
-	// reformat: ÊÇ·ñÖØĞÂ×ö¸ñÊ½»¯´¦Àí
+	// reformat: æ˜¯å¦é‡æ–°åšæ ¼å¼åŒ–å¤„ç†
 	// date_str format: [yyyy-mm-dd hh:mi:ss.ms] 
 	void parse_date_string(const std::string& date_str, bool reformat = false);
 
@@ -196,7 +196,7 @@ private:
 	unsigned int nseconds;
 	unsigned int nmilliseconds;
 
-	unsigned int nisdst;	//ÏÄÁîÊ±µ±Ç°ÊÇ·ñÉúĞ§
+	unsigned int nisdst;	//å¤ä»¤æ—¶å½“å‰æ˜¯å¦ç”Ÿæ•ˆ
 	unsigned int nweekday;	// day of week.
 	unsigned int nyearday;	// day of year.
 
