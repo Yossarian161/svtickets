@@ -1,7 +1,38 @@
 #include "posix_time.h"
 
+#include <time.h>
+
+#if _WIN32
+#include <windows.h>
+#endif
+
+/**	Copyright (c) 2015-20XX jianyaoy. all rights reserved.
+ *	datetime deal class. 
+ *	Author: jianyaoy@gmail.com
+ *  $Date:	2015-02-10 23:00:00 +0800 $
+ */
+
 namespace svhttp
 {
+/**
+ *	全局函数
+ */
+// 字符替换
+std::string& string_replace(std::string& str,const std::string& old_value, const std::string& new_value)
+{
+	for(std::string::size_type pos(0); pos != std::string::npos; pos += new_value.length() )
+	{
+		if( (pos = str.find(old_value,pos)) != std::string::npos )
+			str.replace(pos, old_value.length(), new_value);
+		else
+			break;
+	}
+	return str;
+}
+
+/**
+ *	date_time 类 实现
+ */
 
 date_time::date_time()
 {
@@ -31,14 +62,28 @@ date_time::date_time()
 	nmilliseconds = 0;
 #endif
 
+	nisdst = tmp.tm_isdst;
 	nweekday = tmp.tm_wday; //get_day_of_week(nyear, nmonth, nday);
 	nyearday = tmp.tm_yday;
 };
 
+date_time::date_time(std::string date_str)
+{
+	parse_date_string(date_str, true);
+}
+date_time::date_time(const char* szdate_str)
+{
+	parse_date_string(szdate_str, true);
+}
+date_time::date_time(long sec)
+{
+	set_time(sec);
+}
+
 date_time::~date_time()
 {
 }
-
+// locale
 // [yyyy-mm-dd hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
 std::string date_time::to_string(bool msec /*= false*/)
 {
@@ -62,7 +107,6 @@ std::string date_time::to_date_string()
 	
 	return std::string(date_str);
 }
-
 // [hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
 std::string date_time::to_time_string(bool msec /*= false*/)
 {
@@ -76,6 +120,100 @@ std::string date_time::to_time_string(bool msec /*= false*/)
 		sprintf(time_str, "%02d:%02d:%02d", nhour, nminuter, nseconds);
 	}
 	return std::string(time_str);
+}
+
+// utc
+// utc时区日期和时间 [yyyy-mm-dd hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
+std::string date_time::to_utc_string(bool msec /*= false*/)
+{
+	long lsec = get_time();
+	date_time _date(lsec);
+	_date.set_time(lsec, true);
+
+	return _date.to_string(msec);
+}
+// utc日期 [yyyy-mm-dd] 获取日期字符串
+std::string date_time::to_utc_date_string()
+{
+	long lsec = get_time();
+	date_time _date(lsec);
+	_date.set_time(lsec, true);
+	
+	return _date.to_date_string();
+}
+// utc时间 [hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
+std::string date_time::to_utc_time_string(bool msec/* = false*/)
+{
+	long lsec = get_time();
+	date_time _date(lsec);
+	_date.set_time(lsec, true);
+	
+	return _date.to_time_string(msec);
+}
+
+// 要设置的日期和时间与GMT时间1970年1月1日午夜之间的秒数。 // utc： 是否转换为utc时间
+void date_time::set_time(long sec, bool utc /*= false*/)
+{
+	struct tm tmp;
+
+	if (utc)
+	{
+#if _MSC_VER >= 1400
+		gmtime_s(&tmp,&sec);
+#else
+		tmp = *(gmtime(&sec));
+#endif
+	}
+	else
+	{
+#if _MSC_VER >= 1400
+		localtime_s(&tmp,&sec);
+#else
+		tmp = *(localtime(&sec));
+#endif
+	}
+	
+	nyear = tmp.tm_year + 1900;
+	nmonth = tmp.tm_mon + 1;
+	nday = tmp.tm_mday;
+	
+	nhour = tmp.tm_hour;
+	nminuter = tmp.tm_min;
+	nseconds = tmp.tm_sec;
+	nmilliseconds = 0;
+	
+	nisdst = tmp.tm_isdst;
+	nweekday = tmp.tm_wday; //get_day_of_week(nyear, nmonth, nday);
+	nyearday = tmp.tm_yday;
+}
+
+// 返回1970年1月1日至今的秒数。
+long date_time::get_time()
+{
+	struct tm tmp;
+	tmp.tm_year = nyear - 1900;
+	tmp.tm_mon = nmonth - 1;
+	tmp.tm_mday = nday;
+	tmp.tm_hour = nhour;
+	tmp.tm_min = nminuter;
+	tmp.tm_sec = nseconds;
+	tmp.tm_wday = nweekday;
+	tmp.tm_yday = nyearday;
+	tmp.tm_isdst = nisdst;
+	
+	time_t _time;
+	_time = mktime(&tmp);
+	return _time;
+}
+
+// 重置当前datetime中的毫秒
+void date_time::reset_milliseconds()
+{
+#if _WIN32
+	SYSTEMTIME wtm;
+	GetLocalTime(&wtm);
+	nmilliseconds = wtm.wMilliseconds;
+#endif
 }
 
 /**
@@ -375,7 +513,178 @@ int date_time::compare_date(const date_time& date1, const date_time& date2 )
 
 	return compare_ret;
 }
+// global formatting. 
+void date_time::date_global_format()
+{
+	nyear = 1900;
+	nmonth = 1;
+	nday = 1;
+	
+	nhour = 0;
+	nminuter = 0;
+	nseconds = 0;
+	nmilliseconds = 0;
+	
+	nisdst = 0;
+}
+// sz_date_time format: [yyyy-mm-dd hh:mi:ss.ms] 
+void date_time::parse_date_string(const std::string& sz_date_time, bool reformat/* = false*/)
+{
+	int x_pos, d_pos;
+	std::string sub_str;
+	std::string date_str = sz_date_time;
 
+	// 是否重新格初始化
+	if (reformat)
+	{
+		date_global_format();
+	}
+
+	// 格式转换，防止日期分隔符传入的是/, 导致无法解析
+	string_replace(date_str, "/", "-");
+	
+	x_pos = date_str.find(" ");	// 查找空格，用于判断传入的参数类型
+	
+	// 存在空格(传入的是完整日期时间格式字符串)
+	if (x_pos != -1)
+	{
+		int x_splid = x_pos;
+		sub_str = date_str.substr(0, x_pos);
+		// 日期字符串处理
+		d_pos = sub_str.find("-");
+		if (d_pos != -1)
+		{
+			nyear = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
+			x_pos = d_pos+1;
+			d_pos = sub_str.find("-", x_pos);
+			if (d_pos != -1)	// 含月
+			{
+				nmonth = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+				nday = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
+			}
+			else	// 不含月
+			{
+				nmonth = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+			}
+		}
+		
+		sub_str = date_str.substr(x_splid+1, date_str.length()-x_splid-1);
+		// 时间字符串处理
+		d_pos = sub_str.find(":");
+		if (d_pos != -1)
+		{
+			nhour = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
+			x_pos = d_pos+1;
+			d_pos = sub_str.find(":", x_pos);
+			if (d_pos != -1)	// 含秒
+			{
+				nminuter = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+				x_pos = d_pos+1;
+				d_pos = sub_str.find(".");
+				if (d_pos != -1)	// 含有毫秒
+				{
+					nseconds = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+					nmilliseconds = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
+				}
+				else	//不含毫秒
+				{
+					nseconds = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+				}
+			}
+			else	// 不含秒
+			{
+				nminuter = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+			}
+		}
+
+	}
+	else	// 不存在空格(传入的为日期或时间字符串)
+	{
+		x_pos = date_str.find("-");	// 查找日期分割符
+		if (x_pos != -1)	// 参数为日期格式
+		{
+			sub_str = date_str;
+			// 日期字符串处理
+			d_pos = sub_str.find("-");
+			if (d_pos != -1)
+			{
+				nyear = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
+				x_pos = d_pos+1;
+				d_pos = sub_str.find("-", x_pos);
+				if (d_pos != -1)	// 含月
+				{
+					nmonth = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+					nday = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
+				}
+				else	// 不含月
+				{
+					nmonth = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+				}
+			}
+		}
+		else // 参数为时间格式
+		{
+			sub_str = date_str;
+			// 时间字符串处理
+			d_pos = sub_str.find(":");
+			if (d_pos != -1)
+			{
+				nhour = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
+				x_pos = d_pos+1;
+				d_pos = sub_str.find(":", x_pos);
+				if (d_pos != -1)	// 含秒
+				{
+					nminuter = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+					x_pos = d_pos+1;
+					d_pos = sub_str.find(".");
+					if (d_pos != -1)	// 含有毫秒
+					{
+						nseconds = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
+						nmilliseconds = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
+					}
+					else	//不含毫秒
+					{
+						nseconds = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+					}
+				}
+				else	// 不含秒
+				{
+					nminuter = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
+				}
+			}
+		}
+	}
+
+	// [日期|时间] 错误数据修正
+	if (nmonth > 12 || nmonth == 0)
+	{
+		nmonth = 1;
+	}
+	if (nday == 0 || nday > 31)
+	{
+		nday = 1;
+	}
+	if (nhour > 24)
+	{
+		nhour = 0;
+	}
+	if (nminuter > 60)
+	{
+		nminuter = 0;
+	}
+	if (nseconds > 60)
+	{
+		nseconds = 0;
+	}
+	if (nmilliseconds > 999)
+	{
+		nmilliseconds = 0;
+	}
+
+	// 使用修正的数据计算星期x和当前天数(年)
+	nweekday = get_day_of_week(nyear, nmonth, nday);
+	nyearday = get_day_of_year(nyear, nmonth, nday);
+}
 
 
 } // @end namespace svhttp
