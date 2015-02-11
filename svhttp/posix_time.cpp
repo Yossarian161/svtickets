@@ -9,15 +9,15 @@
 /**	Copyright (c) 2015-20XX jianyaoy. all rights reserved.
  *	datetime deal class. 
  *	Author: jianyaoy@gmail.com
- *  $Date:	2015-02-10 23:00:00 +0800 $
+ *	$Date:  2015-02-10 23:00:00 +0800 $
  */
 
 namespace svhttp
 {
 /**
- *	È«¾Öº¯Êı
+ *	å…¨å±€å‡½æ•°
  */
-// ×Ö·ûÌæ»»
+// å­—ç¬¦æ›¿æ¢
 std::string& string_replace(std::string& str,const std::string& old_value, const std::string& new_value)
 {
 	for(std::string::size_type pos(0); pos != std::string::npos; pos += new_value.length() )
@@ -31,7 +31,7 @@ std::string& string_replace(std::string& str,const std::string& old_value, const
 }
 
 /**
- *	date_time Àà ÊµÏÖ
+ *	date_time ç±» å®ç°
  */
 
 date_time::date_time()
@@ -84,7 +84,7 @@ date_time::~date_time()
 {
 }
 // locale
-// [yyyy-mm-dd hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+// [yyyy-mm-dd hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 std::string date_time::to_string(bool msec /*= false*/)
 {
 	char time_str[64] = {0};
@@ -107,7 +107,7 @@ std::string date_time::to_date_string()
 	
 	return std::string(date_str);
 }
-// [hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+// [hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 std::string date_time::to_time_string(bool msec /*= false*/)
 {
 	char time_str[64] = {0};
@@ -123,7 +123,7 @@ std::string date_time::to_time_string(bool msec /*= false*/)
 }
 
 // utc
-// utcÊ±ÇøÈÕÆÚºÍÊ±¼ä [yyyy-mm-dd hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+// utcæ—¶åŒºæ—¥æœŸå’Œæ—¶é—´ [yyyy-mm-dd hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 std::string date_time::to_utc_string(bool msec /*= false*/)
 {
 	long lsec = get_time();
@@ -132,7 +132,7 @@ std::string date_time::to_utc_string(bool msec /*= false*/)
 
 	return _date.to_string(msec);
 }
-// utcÈÕÆÚ [yyyy-mm-dd] »ñÈ¡ÈÕÆÚ×Ö·û´®
+// utcæ—¥æœŸ [yyyy-mm-dd] è·å–æ—¥æœŸå­—ç¬¦ä¸²
 std::string date_time::to_utc_date_string()
 {
 	long lsec = get_time();
@@ -141,7 +141,7 @@ std::string date_time::to_utc_date_string()
 	
 	return _date.to_date_string();
 }
-// utcÊ±¼ä [hh:mi:ss.ms] msec: ºÁÃë¼¶ (true: ·µ»ØÊ±¼ä×Ö·û¾«È·µ½ºÁÃë)
+// utcæ—¶é—´ [hh:mi:ss.ms] msec: æ¯«ç§’çº§ (true: è¿”å›æ—¶é—´å­—ç¬¦ç²¾ç¡®åˆ°æ¯«ç§’)
 std::string date_time::to_utc_time_string(bool msec/* = false*/)
 {
 	long lsec = get_time();
@@ -151,7 +151,7 @@ std::string date_time::to_utc_time_string(bool msec/* = false*/)
 	return _date.to_time_string(msec);
 }
 
-// ÒªÉèÖÃµÄÈÕÆÚºÍÊ±¼äÓëGMTÊ±¼ä1970Äê1ÔÂ1ÈÕÎçÒ¹Ö®¼äµÄÃëÊı¡£ // utc£º ÊÇ·ñ×ª»»ÎªutcÊ±¼ä
+// è¦è®¾ç½®çš„æ—¥æœŸå’Œæ—¶é—´ä¸GMTæ—¶é—´1970å¹´1æœˆ1æ—¥åˆå¤œä¹‹é—´çš„ç§’æ•°ã€‚ // utcï¼š æ˜¯å¦è½¬æ¢ä¸ºutcæ—¶é—´
 void date_time::set_time(long sec, bool utc /*= false*/)
 {
 	struct tm tmp;
@@ -187,7 +187,7 @@ void date_time::set_time(long sec, bool utc /*= false*/)
 	nyearday = tmp.tm_yday;
 }
 
-// ·µ»Ø1970Äê1ÔÂ1ÈÕÖÁ½ñµÄÃëÊı¡£
+// è¿”å›1970å¹´1æœˆ1æ—¥è‡³ä»Šçš„ç§’æ•°ã€‚
 long date_time::get_time()
 {
 	struct tm tmp;
@@ -206,7 +206,7 @@ long date_time::get_time()
 	return _time;
 }
 
-// ÖØÖÃµ±Ç°datetimeÖĞµÄºÁÃë
+// é‡ç½®å½“å‰datetimeä¸­çš„æ¯«ç§’
 void date_time::reset_milliseconds()
 {
 #if _WIN32
@@ -280,13 +280,13 @@ unsigned int date_time::get_milli_seconds()
 	return nmilliseconds;
 }
 
-// »ñÈ¡date_timeÈÕÆÚ¶ÔÓ¦µÄĞÇÆÚx <nweekday: days since Sunday - [0,6] >
+// è·å–date_timeæ—¥æœŸå¯¹åº”çš„æ˜ŸæœŸx <nweekday: days since Sunday - [0,6] >
 std::string date_time::get_week_day_abbr()
 {
 	const std::string weeks[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 	return weeks[nweekday];
 }
-// »ñÈ¡date_timeÈÕÆÚ¶ÔÓ¦µÄÔÂ·İ Ó¢ÎÄËõĞ´
+// è·å–date_timeæ—¥æœŸå¯¹åº”çš„æœˆä»½ è‹±æ–‡ç¼©å†™
 std::string date_time::get_month_abbr()
 {
 	const std::string months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
@@ -300,7 +300,7 @@ unsigned int date_time::get_year_day()
 	return get_day_of_year(nyear, nmonth, nday);
 }
 
-// ¼ÆËã³öÄ³Ìì Ç°/ºó idays ÌìµÄÈÕÆÚ
+// è®¡ç®—å‡ºæŸå¤© å‰/å idays å¤©çš„æ—¥æœŸ
 void date_time::add_any_days(int idays)
 {
 	if (idays == 0)
@@ -344,7 +344,7 @@ void date_time::add_any_days(int idays)
 	}
 }
 
-// ²ÌÀÕ¹«Ê½: ¼ÆËãÖ¸¶¨ÈÕÆÚ¶ÔÓ¦µÄĞÇÆÚ¼¸ since Sunday - [0,6]
+// è”¡å‹’å…¬å¼: è®¡ç®—æŒ‡å®šæ—¥æœŸå¯¹åº”çš„æ˜ŸæœŸå‡  since Sunday - [0,6]
 unsigned int date_time::get_day_of_week( const unsigned int& iyear, const unsigned int& imonth, const unsigned int& iday )
 {
 	int iweek = 0;
@@ -365,12 +365,12 @@ unsigned int date_time::get_day_of_week( const unsigned int& iyear, const unsign
 		d = iday;
 	}
 	
-	iweek = y + y / 4 + c / 4 - 2 * c + 26 * ( m + 1 ) / 10 + d - 1;    //²ÌÀÕ¹«Ê½
-	iweek = iweek >= 0 ? ( iweek % 7 ) : ( iweek % 7 + 7 );    // iweek Îª¸ºÊ±È¡Ä£
+	iweek = y + y / 4 + c / 4 - 2 * c + 26 * ( m + 1 ) / 10 + d - 1;    //è”¡å‹’å…¬å¼
+	iweek = iweek >= 0 ? ( iweek % 7 ) : ( iweek % 7 + 7 );    // iweek ä¸ºè´Ÿæ—¶å–æ¨¡
 	
 	return (unsigned)iweek;
 }
-// ¼ÆËãÄ³ÔÂµÄÌìÊı
+// è®¡ç®—æŸæœˆçš„å¤©æ•°
 unsigned int date_time::get_day_of_month(const unsigned int& iyear, const unsigned int& imonth)
 {
 	unsigned iday = 0;
@@ -389,7 +389,7 @@ unsigned int date_time::get_day_of_month(const unsigned int& iyear, const unsign
 		imonth == 11 ){
 		iday = 30;
 	}
-	if(imonth == 2){	//¶şÔÂÒª·ÖÈòÄê/Æ½Äê
+	if(imonth == 2){	//äºŒæœˆè¦åˆ†é—°å¹´/å¹³å¹´
 		iday = (unsigned int)( ((iyear%4 == 0) && (iyear%100 != 0 ||iyear%400 == 0)) ? 29:28 );
 	}
 	return iday;
@@ -434,7 +434,7 @@ int date_time::get_diff_date( date_time date1, date_time date2,const unsigned in
 		return nret;
 	}
 
-	//È¡Ïà²îÌìÊı
+	//å–ç›¸å·®å¤©æ•°
 	int ndays = 0;
 	if (compare_ret < 0)
 	{
@@ -453,7 +453,7 @@ int date_time::get_diff_date( date_time date1, date_time date2,const unsigned in
 		}
 	}
 
-	//ÉèÖÃ·µ»ØÖµ
+	//è®¾ç½®è¿”å›å€¼
 	switch(itype)
 	{
 	case 2:
@@ -534,120 +534,120 @@ void date_time::parse_date_string(const std::string& sz_date_time, bool reformat
 	std::string sub_str;
 	std::string date_str = sz_date_time;
 
-	// ÊÇ·ñÖØĞÂ¸ñ³õÊ¼»¯
+	// æ˜¯å¦é‡æ–°æ ¼åˆå§‹åŒ–
 	if (reformat)
 	{
 		date_global_format();
 	}
 
-	// ¸ñÊ½×ª»»£¬·ÀÖ¹ÈÕÆÚ·Ö¸ô·û´«ÈëµÄÊÇ/, µ¼ÖÂÎŞ·¨½âÎö
+	// æ ¼å¼è½¬æ¢ï¼Œé˜²æ­¢æ—¥æœŸåˆ†éš”ç¬¦ä¼ å…¥çš„æ˜¯/, å¯¼è‡´æ— æ³•è§£æ
 	string_replace(date_str, "/", "-");
 	
-	x_pos = date_str.find(" ");	// ²éÕÒ¿Õ¸ñ£¬ÓÃÓÚÅĞ¶Ï´«ÈëµÄ²ÎÊıÀàĞÍ
+	x_pos = date_str.find(" ");	// æŸ¥æ‰¾ç©ºæ ¼ï¼Œç”¨äºåˆ¤æ–­ä¼ å…¥çš„å‚æ•°ç±»å‹
 	
-	// ´æÔÚ¿Õ¸ñ(´«ÈëµÄÊÇÍêÕûÈÕÆÚÊ±¼ä¸ñÊ½×Ö·û´®)
+	// å­˜åœ¨ç©ºæ ¼(ä¼ å…¥çš„æ˜¯å®Œæ•´æ—¥æœŸæ—¶é—´æ ¼å¼å­—ç¬¦ä¸²)
 	if (x_pos != -1)
 	{
 		int x_splid = x_pos;
 		sub_str = date_str.substr(0, x_pos);
-		// ÈÕÆÚ×Ö·û´®´¦Àí
+		// æ—¥æœŸå­—ç¬¦ä¸²å¤„ç†
 		d_pos = sub_str.find("-");
 		if (d_pos != -1)
 		{
 			nyear = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
 			x_pos = d_pos+1;
 			d_pos = sub_str.find("-", x_pos);
-			if (d_pos != -1)	// º¬ÔÂ
+			if (d_pos != -1)	// å«æœˆ
 			{
 				nmonth = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 				nday = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
 			}
-			else	// ²»º¬ÔÂ
+			else	// ä¸å«æœˆ
 			{
 				nmonth = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 			}
 		}
 		
 		sub_str = date_str.substr(x_splid+1, date_str.length()-x_splid-1);
-		// Ê±¼ä×Ö·û´®´¦Àí
+		// æ—¶é—´å­—ç¬¦ä¸²å¤„ç†
 		d_pos = sub_str.find(":");
 		if (d_pos != -1)
 		{
 			nhour = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
 			x_pos = d_pos+1;
 			d_pos = sub_str.find(":", x_pos);
-			if (d_pos != -1)	// º¬Ãë
+			if (d_pos != -1)	// å«ç§’
 			{
 				nminuter = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 				x_pos = d_pos+1;
 				d_pos = sub_str.find(".");
-				if (d_pos != -1)	// º¬ÓĞºÁÃë
+				if (d_pos != -1)	// å«æœ‰æ¯«ç§’
 				{
 					nseconds = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 					nmilliseconds = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
 				}
-				else	//²»º¬ºÁÃë
+				else	//ä¸å«æ¯«ç§’
 				{
 					nseconds = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 				}
 			}
-			else	// ²»º¬Ãë
+			else	// ä¸å«ç§’
 			{
 				nminuter = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 			}
 		}
 
 	}
-	else	// ²»´æÔÚ¿Õ¸ñ(´«ÈëµÄÎªÈÕÆÚ»òÊ±¼ä×Ö·û´®)
+	else	// ä¸å­˜åœ¨ç©ºæ ¼(ä¼ å…¥çš„ä¸ºæ—¥æœŸæˆ–æ—¶é—´å­—ç¬¦ä¸²)
 	{
-		x_pos = date_str.find("-");	// ²éÕÒÈÕÆÚ·Ö¸î·û
-		if (x_pos != -1)	// ²ÎÊıÎªÈÕÆÚ¸ñÊ½
+		x_pos = date_str.find("-");	// æŸ¥æ‰¾æ—¥æœŸåˆ†å‰²ç¬¦
+		if (x_pos != -1)	// å‚æ•°ä¸ºæ—¥æœŸæ ¼å¼
 		{
 			sub_str = date_str;
-			// ÈÕÆÚ×Ö·û´®´¦Àí
+			// æ—¥æœŸå­—ç¬¦ä¸²å¤„ç†
 			d_pos = sub_str.find("-");
 			if (d_pos != -1)
 			{
 				nyear = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
 				x_pos = d_pos+1;
 				d_pos = sub_str.find("-", x_pos);
-				if (d_pos != -1)	// º¬ÔÂ
+				if (d_pos != -1)	// å«æœˆ
 				{
 					nmonth = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 					nday = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
 				}
-				else	// ²»º¬ÔÂ
+				else	// ä¸å«æœˆ
 				{
 					nmonth = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 				}
 			}
 		}
-		else // ²ÎÊıÎªÊ±¼ä¸ñÊ½
+		else // å‚æ•°ä¸ºæ—¶é—´æ ¼å¼
 		{
 			sub_str = date_str;
-			// Ê±¼ä×Ö·û´®´¦Àí
+			// æ—¶é—´å­—ç¬¦ä¸²å¤„ç†
 			d_pos = sub_str.find(":");
 			if (d_pos != -1)
 			{
 				nhour = (unsigned)atoi(sub_str.substr(0, d_pos).c_str());
 				x_pos = d_pos+1;
 				d_pos = sub_str.find(":", x_pos);
-				if (d_pos != -1)	// º¬Ãë
+				if (d_pos != -1)	// å«ç§’
 				{
 					nminuter = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 					x_pos = d_pos+1;
 					d_pos = sub_str.find(".");
-					if (d_pos != -1)	// º¬ÓĞºÁÃë
+					if (d_pos != -1)	// å«æœ‰æ¯«ç§’
 					{
 						nseconds = (unsigned)atoi(sub_str.substr(x_pos, d_pos-x_pos).c_str());
 						nmilliseconds = (unsigned)atoi(sub_str.substr(d_pos+1, sub_str.length()-d_pos-1).c_str());
 					}
-					else	//²»º¬ºÁÃë
+					else	//ä¸å«æ¯«ç§’
 					{
 						nseconds = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 					}
 				}
-				else	// ²»º¬Ãë
+				else	// ä¸å«ç§’
 				{
 					nminuter = (unsigned)atoi(sub_str.substr(x_pos, sub_str.length()-x_pos).c_str());
 				}
@@ -655,7 +655,7 @@ void date_time::parse_date_string(const std::string& sz_date_time, bool reformat
 		}
 	}
 
-	// [ÈÕÆÚ|Ê±¼ä] ´íÎóÊı¾İĞŞÕı
+	// [æ—¥æœŸ|æ—¶é—´] é”™è¯¯æ•°æ®ä¿®æ­£
 	if (nmonth > 12 || nmonth == 0)
 	{
 		nmonth = 1;
@@ -681,7 +681,7 @@ void date_time::parse_date_string(const std::string& sz_date_time, bool reformat
 		nmilliseconds = 0;
 	}
 
-	// Ê¹ÓÃĞŞÕıµÄÊı¾İ¼ÆËãĞÇÆÚxºÍµ±Ç°ÌìÊı(Äê)
+	// ä½¿ç”¨ä¿®æ­£çš„æ•°æ®è®¡ç®—æ˜ŸæœŸxå’Œå½“å‰å¤©æ•°(å¹´)
 	nweekday = get_day_of_week(nyear, nmonth, nday);
 	nyearday = get_day_of_year(nyear, nmonth, nday);
 }
