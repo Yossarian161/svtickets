@@ -75,7 +75,7 @@ date_time::date_time(const char* szdate_str)
 {
 	parse_date_string(szdate_str, true);
 }
-date_time::date_time(long sec)
+date_time::date_time(time_t sec)
 {
 	set_time(sec);
 }
@@ -126,7 +126,7 @@ std::string date_time::to_time_string(bool msec /*= false*/)
 // utc时区日期和时间 [yyyy-mm-dd hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
 std::string date_time::to_utc_string(bool msec /*= false*/)
 {
-	long lsec = get_time();
+	time_t lsec = get_time();
 	date_time _date(lsec);
 	_date.set_time(lsec, true);
 
@@ -135,7 +135,7 @@ std::string date_time::to_utc_string(bool msec /*= false*/)
 // utc日期 [yyyy-mm-dd] 获取日期字符串
 std::string date_time::to_utc_date_string()
 {
-	long lsec = get_time();
+	time_t lsec = get_time();
 	date_time _date(lsec);
 	_date.set_time(lsec, true);
 	
@@ -144,7 +144,7 @@ std::string date_time::to_utc_date_string()
 // utc时间 [hh:mi:ss.ms] msec: 毫秒级 (true: 返回时间字符精确到毫秒)
 std::string date_time::to_utc_time_string(bool msec/* = false*/)
 {
-	long lsec = get_time();
+	time_t lsec = get_time();
 	date_time _date(lsec);
 	_date.set_time(lsec, true);
 	
@@ -152,7 +152,7 @@ std::string date_time::to_utc_time_string(bool msec/* = false*/)
 }
 
 // 要设置的日期和时间与GMT时间1970年1月1日午夜之间的秒数。 // utc： 是否转换为utc时间
-void date_time::set_time(long sec, bool utc /*= false*/)
+void date_time::set_time(time_t sec, bool utc /*= false*/)
 {
 	struct tm tmp;
 
@@ -188,7 +188,7 @@ void date_time::set_time(long sec, bool utc /*= false*/)
 }
 
 // 返回1970年1月1日至今的秒数。
-long date_time::get_time()
+time_t date_time::get_time()
 {
 	struct tm tmp;
 	tmp.tm_year = nyear - 1900;

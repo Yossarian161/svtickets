@@ -4,7 +4,7 @@
 /**	Copyright (c) 2015-20XX jianyaoy. all rights reserved.
  *	datetime deal class. 
  *	Author: jianyaoy@gmail.com
- *	$Date:  2015-02-11 00:00:00 +0800 $
+ *	$Date:  2015-02-10 23:00:00 +0800 $
  */
 
 #include <string>
@@ -19,7 +19,7 @@ public:
 	date_time();
 	date_time(std::string date_str);
 	date_time(const char* szdate_str);
-	date_time(long sec);	// 以秒设置Date对象 <1970年1月1日至今的秒数>
+	date_time(time_t sec);	// 以秒设置Date对象 <1970年1月1日至今的秒数>
 	// destructor
 	~date_time();
 
@@ -40,7 +40,7 @@ public:
 	std::string to_utc_time_string(bool msec = false);
 
 	// 返回1970年1月1日至今的秒数。
-	long get_time();
+	time_t get_time();
 	// 重置当前datetime中的毫秒 <tip: 当前只有在windows有效>
 	void reset_milliseconds();
 
@@ -179,7 +179,7 @@ public:
 
 private:
 	// 要设置的日期和时间与GMT时间1970年1月1日午夜之间的秒数。 // utc： 是否转换为utc时间
-	void set_time(long sec, bool utc = false);
+	void set_time(time_t sec, bool utc = false);
 
 	// date_time 全局格式化(date_time初始化)
 	void date_global_format();
