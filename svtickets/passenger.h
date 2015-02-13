@@ -65,6 +65,9 @@ public:
 	void set_mobile_no(const std::string& mobile);
 	void set_ticket_type(const std::string& ttype = "1");
 
+	void set_order_seat_type(const std::string& stype);
+	void set_order_ticket_type(const std::string& ttype);
+
 	std::string get_passenger_name();
 	std::string get_passenger_id_type();
 	std::string get_passenger_id_type_name();
@@ -78,6 +81,10 @@ public:
 	std::string get_mobile_no();
 	std::string get_ticket_type();
 	std::string get_ticket_type_name();
+	
+	std::string get_order_seat_type();
+	std::string get_order_seat_type_code();
+	std::string get_order_ticket_type();
 
 private:
 	std::string passenger_name;
@@ -94,6 +101,10 @@ private:
 	 *	ticket_type: "1":"成人票","2":"孩票","3":"学生票","4":"伤残军人票"
 	 */
 	std::string ticket_type;
+
+	// 订单确认 席别和票种
+	std::string order_seat_type;
+	std::string order_ticket_type;
 };
 
 /**
@@ -150,10 +161,11 @@ class seats_type
 public:
 	static std::string get_seat_type_name(const std::string& seat_type, bool utype = true);
 	static std::string get_seat_type_code(const std::string& seat_type);
-	static std::string get_seat_type(const std::string& seat_code);
+	static std::string get_seat_type(const std::string& seat_code, bool ucode = true);
 private:
 	static std::string get_seat_info_from_type(const std::string& seat_type, int ret_code = 1);
 	static std::string get_seat_info_from_code(const std::string& seat_code, int ret_type = 1);
+	static std::string get_seat_info_from_name(const std::string& seat_name, int ret_code = 1);
 };
 
 #endif

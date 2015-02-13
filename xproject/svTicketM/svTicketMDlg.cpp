@@ -343,7 +343,7 @@ void CsvTicketMDlg::OnBnClickedBtnQuery()
 		AfxMessageBox(_T("出发地或目的地不允许为空！"));
 		return ;
 	}
-	bool m_surplus_query = true;	//启用余票查询
+	bool m_surplus_query = false;	//启用余票查询
 
 	CString stime;
 	GetDlgItemText(IDC_TRAIN_DATE, stime);
@@ -656,10 +656,14 @@ void CsvTicketMDlg::OnClickedSubmitOrder( int wp, int lp )
 	ShowCheckOrderDialog();
 
 	CString log_msg;
-	while (!gl_manage.query_train_data(m_ticket_dto))
+
+	if (gl_manage.get_train_data_list().size() == 0)
 	{
-		svTicketRunLogPush(_T("预定车票查询..."));
-		Sleep(1000);
+		while (!gl_manage.query_train_data(m_ticket_dto))
+		{
+			svTicketRunLogPush(_T("预定车票查询..."));
+			Sleep(1000);
+		}
 	}
 
 	m_checkorder_dlg->m_train_info = gl_manage.get_train_data_list()[wp-1];
@@ -753,19 +757,38 @@ void CsvTicketMDlg::svTicketRunLogPush( CString str_msg )
 void CsvTicketMDlg::OnBnClickedBtnSubmitOrder()
 {
 	CString log_msg;
+	if (m_checkorder_dlg->get_passenger_count() < 1)
+	{
+		svTicketRunLogPush(_T("预订车票乘客不能少于1人。"));
+		return ;
+	}
 	// todo: 更新乘客席位信息
-
+	m_checkorder_dlg->applyPassengerInfo();
 	// 开始提交。
 	// 验证码自动识别
 	std::string pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
 
 	while (!gl_manage.passenger_passcode_verify(pass_str))
 	{
-		log_msg.Format(_T("验证码：%s 识别错误."), win32_A2U(pass_str.c_str()));
+		log_msg.Format(_T("验证码：[%s] 识别错误."), win32_A2U(pass_str.c_str()));
 		svTicketRunLogPush(log_msg);
 		gl_manage.passenger_passcode_reflush();
 		pass_str = xdecaptcha::get_instance()->get_vcode_from_file(std::string("./data/pass.png"));
 	}
-	log_msg.Format(_T("验证码：%s 识别成功."), win32_A2U(pass_str.c_str()));
+	log_msg.Format(_T("验证码：[%s] 识别成功."), win32_A2U(pass_str.c_str()));
 	svTicketRunLogPush(log_msg);
+
+	// checkorder..
+	if (!gl_manage.check_order_info(pass_str))
+	{
+		log_msg = win32_A2U(gl_manage.get_error_buffer().c_str());
+		svTicketRunLogPush(log_msg);
+
+		// 乘客信息不合法，不能继续提交
+		return ;
+	}
+	
+	// 排队
+
+
 }

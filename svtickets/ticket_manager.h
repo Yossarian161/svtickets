@@ -87,8 +87,12 @@ public:
 	bool passenger_passcode_reflush(std::string img_path = "data/pass.png");
 	// 预定确认验证码校验
 	bool passenger_passcode_verify(std::string passcode_str);
-	// 
+	// 检查用户选择的乘客信息的合法性
 	bool check_order_info(std::string spasscode);
+	// 可否排队判断
+	bool get_queue_count(train_data& _train_data);
+	// 排队下单操作
+	bool confirm_single_for_queue();
 
 	/**
 	 *	get 系列函数

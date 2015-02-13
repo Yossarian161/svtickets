@@ -28,6 +28,9 @@ public:
 	void OnInitGrid();
 	void updateTrainInfo();
 	void updatePassengerInfo();
+	void applyPassengerInfo();
+
+	int get_passenger_count();
 
 	train_data m_train_info;
 	// combox 下拉列表。。

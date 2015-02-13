@@ -84,6 +84,9 @@ void passenger_datum::set_passenger_datum( contacts_datum& contacts, const std::
 	{
 		set_ticket_type();
 	}
+
+	set_order_seat_type(seat_type);
+	set_order_ticket_type(ticket_type);
 }
 
 void passenger_datum::set_passenger_name( const std::string& pname )
@@ -92,7 +95,7 @@ void passenger_datum::set_passenger_name( const std::string& pname )
 }
 void passenger_datum::set_passenger_id_type(const std::string& ptype)
 {
-	passenger_type = ptype;
+	passenger_id_type = ptype;
 }
 void passenger_datum::set_passenger_id_type_name( const std::string& pid_tname )
 {
@@ -117,6 +120,15 @@ void passenger_datum::set_mobile_no( const std::string& mobile )
 void passenger_datum::set_ticket_type( const std::string& ttype )
 {
 	ticket_type = ttype;
+}
+
+void passenger_datum::set_order_seat_type(const std::string& stype)
+{
+	order_seat_type = stype;
+}
+void passenger_datum::set_order_ticket_type(const std::string& ttype)
+{
+	order_ticket_type = ttype;
 }
 
 std::string passenger_datum::get_passenger_name()
@@ -185,6 +197,18 @@ std::string passenger_datum::get_ticket_type_name()
 	return ttname;
 }
 
+std::string passenger_datum::get_order_seat_type()
+{
+	return order_seat_type;
+}
+std::string passenger_datum::get_order_seat_type_code()
+{
+	return seats_type::get_seat_type_code(order_seat_type);
+}
+std::string passenger_datum::get_order_ticket_type()
+{
+	return order_ticket_type;
+}
 
 /**
  *	乘客数据管理 类实现
@@ -285,8 +309,8 @@ std::string passenger_dto::get_passenger_ticket_str()
 		}
 		passenger_datum& passenger = *iter;
 		
-		osstr_ticket << passenger.get_seat_type_code() << ",0," 
-			<< passenger.get_ticket_type() <<  "," 
+		osstr_ticket << passenger.get_order_seat_type_code() << ",0," 
+			<< passenger.get_order_ticket_type() <<  "," 
 			<< passenger.get_passenger_name() << ","  
 			<< passenger.get_passenger_id_type() << ","
 			<< passenger.get_passenger_id_no() << ","
@@ -332,9 +356,16 @@ std::string seats_type::get_seat_type_code( const std::string& seat_type )
 {
 	return get_seat_info_from_type(seat_type);
 }
-std::string seats_type::get_seat_type(const std::string& seat_code)
+std::string seats_type::get_seat_type(const std::string& seat_code, bool ucode /*= true*/)
 {
-	return get_seat_info_from_code(seat_code);
+	if (ucode)
+	{
+		return get_seat_info_from_code(seat_code);
+	}
+	else
+	{
+		return get_seat_info_from_name(seat_code, 0);
+	}
 }
 
 std::string seats_type::get_seat_info_from_type( const std::string& seat_type, int ret_code )
@@ -491,6 +522,82 @@ std::string seats_type::get_seat_info_from_code( const std::string& seat_code, i
 	else
 	{
 		return seat_name;
+	}
+}
+
+std::string seats_type::get_seat_info_from_name( const std::string& seat_name, int ret_code /*= 1*/ )
+{
+	std::string seat_type;
+	std::string seat_code;
+
+	if (seat_name == "一等座")
+	{
+		seat_type = "ZY";
+		seat_code = "M";
+	}
+	else if (seat_name == "二等座")
+	{
+		seat_type = "ZE";
+		seat_code = "O";
+	}
+	else if (seat_name == "商务座")
+	{
+		seat_type = "SWZ";
+		seat_code = "9";
+	}
+	else if (seat_name == "特等座")
+	{
+		seat_type = "TZ";
+		seat_code = "P";
+	}
+	else if (seat_name == "硬座")
+	{
+		seat_type = "YZ";
+		seat_code = "1";
+	}
+	else if (seat_name == "软座")
+	{
+		seat_type = "RZ";
+		seat_code = "2";
+	}
+	else if (seat_name == "硬卧")
+	{
+		seat_type = "YW";
+		seat_code = "3";
+	}
+	else if (seat_name == "软卧")
+	{
+		seat_type = "RW";
+		seat_code = "4";
+	}
+	else if (seat_name == "高级软卧")
+	{
+		seat_type = "GR";
+		seat_code = "6";
+	}
+	else if (seat_name == "动卧")
+	{
+		seat_type = "SRRB";
+		seat_code = "F";
+	}
+	else if (seat_name == "高级动卧")
+	{
+		seat_type = "YYRW";
+		seat_code = "A";
+	}
+	else if (seat_name == "无座")
+	{
+		seat_type = "WZ";
+		seat_code = "WZ";
+	}
+
+	if (ret_code == 1)
+	{
+		return seat_code;
+	}
+	else
+	{
+		return seat_type;
 	}
 }
 

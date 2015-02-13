@@ -231,6 +231,7 @@ void CCheckOrderDlg::updatePassengerInfo()
 				m_Grid.SetCellType(irow,icol, RUNTIME_CLASS(CGridCellCombo));
 				break;
 			case 2:
+				// todo: 乘客席位备选方案需改进<按实际车辆备选席位，如该车没有乘客所预选席位则按默认处理>。
 				if (passenger_list[idx].get_seat_type() == "default")
 				{
 					// todo: 根据优先级选择。 现在尚未设置优先级，先直接试用默认值
@@ -298,6 +299,45 @@ void CCheckOrderDlg::updatePassengerInfo()
 
 	UpdateData(FALSE);
 	Invalidate(TRUE);
+}
+
+void CCheckOrderDlg::applyPassengerInfo()
+{
+	std::vector<passenger_datum>& passenger_list = gl_manage.get_passengers().get_passenger_datum_list();
+
+	CString item_text;
+	std::string seat_type;
+	std::string ticket_type;
+	for (int idx = 1; idx < m_Grid.GetRowCount(); ++idx)
+	{
+		item_text = m_Grid.GetItemText(idx, 1);
+		if (item_text == _T("成人票"))
+		{
+			ticket_type = "1";
+		}
+		else if (item_text == _T("儿童票"))
+		{
+			ticket_type = "2";
+		}
+		else if (item_text == _T("学生票"))
+		{
+			ticket_type = "3";
+		}
+		else if (item_text == _T("残军票"))
+		{
+			ticket_type = "4";
+		}
+		passenger_list[idx-1].set_order_ticket_type(ticket_type);
+
+		item_text = m_Grid.GetItemText(idx, 2);
+		seat_type = seats_type::get_seat_type(win32_U2A(item_text.GetBuffer(0)), false);
+		passenger_list[idx-1].set_order_seat_type(seat_type);
+	}
+}
+
+int CCheckOrderDlg::get_passenger_count()
+{
+	return m_Grid.GetRowCount()-1;
 }
 
 

@@ -1295,6 +1295,21 @@ bool ticket_manage::check_order_info(std::string spasscode)
 		_error_buf =  msg[(unsigned int)0].asString();
 		return false;
 	}
+	else
+	{
+		Json::Value data_obj = reader_object["data"];
+		if (!data_obj["submitStatus"].asBool())
+		{
+			// "submitStatus":false 
+			_error_buf = data_obj["errMsg"].asString();
+			return false;
+		}
+	}
 	
+	return true;
+}
+
+bool ticket_manage::get_queue_count( train_data& _train_data )
+{
 	return true;
 }
