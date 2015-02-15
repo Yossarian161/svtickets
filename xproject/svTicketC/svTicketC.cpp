@@ -30,7 +30,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			//Sleep(rand()%2000);
 		}
 	}
-#else
+
+	//////////////////////////////////////////////////////////////////////////
 	ticket_manage _manage;
 	
 	if (_manage.login_init() != 1)
@@ -62,8 +63,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	//
 	//_manage.query_passengers();
-
+#else
 	SVLOGGER_ERR << svhttp::date_time().to_time_string(true);
+
+	SVLOGGER_ERR << svhttp::date_time().to_utc_time_string(true);
 	
 	//_manage.confirm_passenger_initdc();
 #endif

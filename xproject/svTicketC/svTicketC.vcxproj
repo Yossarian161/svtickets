@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\svhttp\bencode.h" />
     <ClInclude Include="..\..\svhttp\http_client.h" />
+    <ClInclude Include="..\..\svhttp\settings.hpp" />
     <ClInclude Include="..\..\svhttp\posix_time.h" />
     <ClInclude Include="..\..\svhttp\svhttp.h" />
     <ClInclude Include="..\..\svhttp\svlogger.h" />

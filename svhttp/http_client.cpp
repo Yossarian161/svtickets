@@ -14,31 +14,6 @@ namespace svhttp
 	/**
 	 *	http_global define & describe
 	 */
-	class http_global
-	{
-	public:
-		static http_global* get_instance();
-		std::string get_version();
-
-	private:
-		http_global(){ global_init(); };
-		~http_global(){ global_clean(); };	
-
-		inline bool global_init()
-		{
-			CURLcode ret = curl_global_init(CURL_GLOBAL_ALL);
-			if (CURLE_OK != ret)
-			{
-				std::cerr << "init libcurl failed. " << std::endl;
-				return false;
-			}
-			return true;
-		};
-		inline void global_clean(){ curl_global_cleanup(); };
-
-		static http_global *_sv_http;
-	};
-
 	http_global* http_global::_sv_http = NULL;
 
 	http_global* http_global::get_instance()
@@ -48,6 +23,22 @@ namespace svhttp
 			_sv_http = new http_global;
 		}
 		return _sv_http;
+	}
+
+	bool http_global::global_init()
+	{
+		CURLcode ret = curl_global_init(CURL_GLOBAL_ALL);
+		if (CURLE_OK != ret)
+		{
+			std::cerr << "init libcurl failed. " << std::endl;
+			return false;
+		}
+		return true;
+	};
+
+	void http_global::global_clean()
+	{ 
+		curl_global_cleanup(); 
 	}
 
 	std::string http_global::get_version()
@@ -120,7 +111,7 @@ namespace svhttp
 	{
 		set_option(CURLOPT_URL, url.c_str());
  		
-		if (!init())
+		if (!request_init())
 		{
 			return false;
 		}
@@ -129,7 +120,6 @@ namespace svhttp
 
 		// 每次执行完当次请求，重置请求类型为get<默认>
 		// fixed bugs: post请求后，继续用该curl发的所有请求都变成post的。
-		/*set_post_fields("");*/
 		set_option(CURLOPT_POST, 0);
 
 		if (CURLE_OK != code)
@@ -140,18 +130,18 @@ namespace svhttp
 		return true;
 	}
 
-	bool http_client::init()
+	bool http_client::request_init()
 	{
+		// 添加请求错误信息返回选项
 		if (!set_option(CURLOPT_ERRORBUFFER, _error_buffer))
 		{
 			return false;
 		}
-
+		// 添加超时时间设置选项
 		if (!set_option(CURLOPT_TIMEOUT, _timeout_read) )
 		{
 			return false;
 		}
-
 		if (!set_option(CURLOPT_CONNECTTIMEOUT, _timeout_connect))
 		{
 			return false;
@@ -185,8 +175,6 @@ namespace svhttp
 				return false;
 			}
 		}
-
-		
 
 		// 设置支持gzip
 		if (_accept_encoding)
@@ -275,12 +263,6 @@ namespace svhttp
 
 	bool http_client::set_post_fields( const std::string& post_str )
 	{
-		// when post_str is empty, reset the request type to get. close post.
-// 		if (post_str.empty())
-// 		{
-// 			return set_option(CURLOPT_POST, 0);
-// 		}
-
 		return set_option(CURLOPT_POST, 1)
 			&& set_option(CURLOPT_POSTFIELDS, post_str.c_str())
 			&& set_option(CURLOPT_POSTFIELDSIZE, post_str.length());

@@ -66,6 +66,9 @@
     <ClInclude Include="..\..\svhttp\posix_time.h">
       <Filter>svhttp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\svhttp\settings.hpp">
+      <Filter>svhttp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
