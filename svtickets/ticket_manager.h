@@ -2,6 +2,7 @@
 #define _ticket_manager_hpp_
 
 #include <vector>
+
 #include "svhttp.h"
 
 #include "station.hpp"
